@@ -2,6 +2,10 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+// 追記分
+use App\Http\Controllers\ConferenceController;
+use App\Http\Controllers\ReservationController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -15,6 +19,23 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+// 管理責任者側
+Route::prefix('manager')
+->middleware('can:manager-higher')
+->group(function(){
+    Route::get('index', function(){
+        dd('manager');
+    });
+});
+
+// user側
+Route::middleware('can:user-higher')
+->group(function(){
+    Route::get('index', function(){
+        dd('user');
+    });
 });
 
 require __DIR__.'/auth.php';

@@ -18,6 +18,8 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
+            // Roleを追記
+            $table->tinyInteger('role');
             $table->timestamps();
         });
 

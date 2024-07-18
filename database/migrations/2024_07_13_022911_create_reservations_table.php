@@ -11,16 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // table名は複数形になる。
-        Schema::create('conferences', function (Blueprint $table) {
+        Schema::create('reservations', function (Blueprint $table) {
             $table->id();
             // 追記分
-            $table->string('name');
-            $table->text('information');
-            $table->integer('max_people');
-            $table->dateTime('start_date');
-            $table->dateTime('end_date');
-            $table->boolean('is_visible');
+            // 外部キー設定・同時更新設定
+            $table->foreignId('user_id')->constrained()->onUpdate('cascade');
+            $table->foreignId('event_id')->constrained()->onUpdate('cascade');
+            $table->integer('number_of_people');
+            $table->datetime('canceled_date')->nullable();
 
             $table->timestamps();
         });
@@ -31,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('conferences');
+        Schema::dropIfExists('reservations');
     }
 };
