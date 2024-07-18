@@ -28,7 +28,8 @@ class ConferenceController extends Controller
      */
     public function create()
     {
-        //
+        //追記
+        return view('manager.conferences.create');
     }
 
     /**

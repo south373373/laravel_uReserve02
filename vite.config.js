@@ -7,6 +7,8 @@ export default defineConfig({
             input: [
                 'resources/css/app.css',
                 'resources/js/app.js',
+                // flatpickrを読み込む
+                'resources/js/flatpickr.js',
             ],
             refresh: true,
         }),
