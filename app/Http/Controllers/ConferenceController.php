@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreConferenceRequest;
 use App\Http\Requests\UpdateConferenceRequest;
 use App\Models\Conference;
+// 追記分
+use Illuminate\Support\Facades\DB;
 
 class ConferenceController extends Controller
 {
@@ -13,7 +15,12 @@ class ConferenceController extends Controller
      */
     public function index()
     {
-        //
+        //追記分
+        // conferencesテーブルの昇順・表示件数設定
+        $conferences = Conference::orderBy('start_date','asc')->paginate(10);
+        
+        // resources > views > managerを作成
+        return view('manager.conferences.index',compact('conferences'));
     }
 
     /**

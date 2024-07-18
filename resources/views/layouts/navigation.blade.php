@@ -15,6 +15,14 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
+                    <!-- 管理責任者以上でアクセス可能 -->
+                    <!-- ※「Responsive Navigation Menu」も同様に設定 -->
+                    @can('manager-higher')
+                    <x-nav-link :href="route('conferences.index')" :active="request()->routeIs('conferences.index')">
+                            イベント管理
+                    </x-nav-link>
+                    @endcan
                 </div>
             </div>
 
@@ -70,6 +78,14 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+
+            <!-- 管理責任者以上でアクセス可能 -->
+            <!-- ※「Navigation Links」も同様に設定 -->
+            @can('manager-higher')
+            <x-responsive-nav-link :href="route('conferences.index')" :active="request()->routeIs('conferences.index')">
+                イベント管理
+            </x-responsive-nav-link>
+            @endcan
         </div>
 
         <!-- Responsive Settings Options -->

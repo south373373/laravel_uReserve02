@@ -25,9 +25,13 @@ Route::middleware('auth')->group(function () {
 Route::prefix('manager')
 ->middleware('can:manager-higher')
 ->group(function(){
-    Route::get('index', function(){
-        dd('manager');
-    });
+    // テスト確認
+    // Route::get('index', function(){
+    //     dd('manager');
+    // });
+
+    // Conference用
+    Route::resource('conferences', ConferenceController::class); 
 });
 
 // user側
