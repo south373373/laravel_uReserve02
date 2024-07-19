@@ -37,7 +37,8 @@ class ConferenceController extends Controller
      */
     public function store(StoreConferenceRequest $request)
     {
-        //
+        //追記分
+        dd($request);
     }
 
     /**
