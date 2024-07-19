@@ -7,9 +7,21 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">                
                 <div class="max-w-2xl py-4 mx-auto">
+                    <!-- validationのエラー出力設定 -->
+                    <div class="mb-5 text-red-500">
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li type="dist">{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                    </div>
+
                     <!-- Session Status -->
                     <x-auth-session-status class="mb-4" :status="session('status')" />
 
@@ -20,12 +32,14 @@
                         <div>
                             <x-input-label for="event_name" value="イベント名" />
                             <x-text-input id="event_name" class="block mt-1 w-full" type="text" name="event_name" :value="old('event_name')" required autofocus autocomplete="username" />
+                            
                         </div>
 
                         <!-- イベント名 -->
                         <div class="mt-4">
                             <x-input-label for="information" value="イベント詳細" />
                             <x-textarea row="3" id="information" class="block mt-1 w-full">{{ old('information')}}</x-textarea>
+                            
                         </div>
 
                         <div class="md:flex justify-between">
@@ -37,6 +51,7 @@
                                                 type="text"
                                                 name="event_date"
                                                 required />
+                                
                             </div>
 
                             <!-- 開始時間 -->
