@@ -8,6 +8,7 @@ use App\Models\Conference;
 // 追記分
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Services\ConferenceService;
 
 class ConferenceController extends Controller
 {
@@ -48,10 +49,8 @@ class ConferenceController extends Controller
         // ->exists();
 
         // 重複のチェック詳細
-        $check = Conference::whereDate('start_date', $request['event_date'])
-        ->whereTime('end_date', '>', $request['start_time'])
-        ->whereTime('start_date', '<', $request['end_time'])
-        ->exists();
+        // - Services > ConferenceService.phpの関数を記載
+        $check = ConferenceService::checkEventDuplication($request['event_date'], $request['start_time'], $request['end_time']);
 
         // dd($check);
         // 重複のチェック処理
@@ -60,18 +59,16 @@ class ConferenceController extends Controller
             return view('manager.conferences.create');
         }
         
+
         // 日付処理の機能
         // ・start_time用
-        $start = $request['event_date'] . " " . $request['start_time'];
-        $startDate = Carbon::createFromFormat(
-            'Y-m-d H:i', $start
-        );
-        
+        // - Services > ConferenceService.phpの関数を記載
+        $startDate = ConferenceService::joinDateAndTime($request['event_date'], $request['start_time']);
+
         // ・end_time用
-        $end = $request['event_date'] . " " . $request['end_time'];
-        $endDate = Carbon::createFromFormat(
-            'Y-m-d H:i', $end
-        );
+        // - Services > ConferenceService.phpの関数を記載
+        $endDate = ConferenceService::joinDateAndTime($request['event_date'], $request['end_time']);
+
 
         Conference::create([
             'name' => $request['event_name'],
