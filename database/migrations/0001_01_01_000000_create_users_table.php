@@ -19,7 +19,8 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
             // Roleを追記
-            $table->tinyInteger('role');
+            // $table->tinyInteger('role');
+            $table->tinyInteger('role')->nullable();
             $table->timestamps();
         });
 

@@ -9,7 +9,15 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <section class="text-gray-600 body-font">
-              <div class="container px-5 py-24 mx-auto">
+              <div class="container px-5 py-5 mx-auto">
+
+              <!-- flashメッセージの出力設定 -->
+              @if(session('status'))
+                <div class="mb-4 font-medium text-sm text-green-600">
+                    {{ session('status') }}
+                </div>
+              @endif
+
               <button onclick="location.href='{{ route('conferences.create')}}'" class="flex mb-4 ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">新規登録</button>
                 <div class="w-full mx-auto overflow-auto">
                   <table class="table-auto w-full text-left whitespace-no-wrap">

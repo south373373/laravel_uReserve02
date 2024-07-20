@@ -22,14 +22,6 @@ class StoreConferenceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //追記
-            // 'event_name' => ['required','max:50'],
-            // 'information' => ['required','max:200'],
-            // 'event_date' => ['required','date'],
-            // 'start_time' => ['required'],
-            // 'end_time' => ['required','after:start_time'],
-            // 'max_people' => ['required','numeric','between:1,20'],
-            // 'is_visible' => ['required','boolean'],
             //validationを定義
             'event_name' => ['required', 'max:50'],
             'information' => ['required', 'max:200'],

@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateConferenceRequest;
 use App\Models\Conference;
 // 追記分
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class ConferenceController extends Controller
 {
@@ -38,7 +39,54 @@ class ConferenceController extends Controller
     public function store(StoreConferenceRequest $request)
     {
         //追記分
-        dd($request);
+
+        // 重複のチェック
+        // $check = DB::table('conferences')
+        // ->whereDate('start_date', $request['event_date'])
+        // ->whereTime('end_date', '>', $request['start_time'])
+        // ->whereTime('start_date', '<', $request['end_time'])
+        // ->exists();
+
+        // 重複のチェック詳細
+        $check = Conference::whereDate('start_date', $request['event_date'])
+        ->whereTime('end_date', '>', $request['start_time'])
+        ->whereTime('start_date', '<', $request['end_time'])
+        ->exists();
+
+        // dd($check);
+        // 重複のチェック処理
+        if($check){
+            session()->flash('status', 'この時間帯は既に他の予約が存在します。');
+            return view('manager.conferences.create');
+        }
+        
+        // 日付処理の機能
+        // ・start_time用
+        $start = $request['event_date'] . " " . $request['start_time'];
+        $startDate = Carbon::createFromFormat(
+            'Y-m-d H:i', $start
+        );
+        
+        // ・end_time用
+        $end = $request['event_date'] . " " . $request['end_time'];
+        $endDate = Carbon::createFromFormat(
+            'Y-m-d H:i', $end
+        );
+
+        Conference::create([
+            'name' => $request['event_name'],
+            'information' => $request['information'],
+            // start_date・end_dateは上記の変数を記載
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+            'max_people' => $request['max_people'],
+            'is_visible' => $request['is_visible'], 
+        ]);
+
+        // flashメッセージを設定
+        session()->flash('status', '登録OKです');
+
+        return to_route('conferences.index');
     }
 
     /**
