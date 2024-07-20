@@ -4,6 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+// 日付関連の機能追記
+use Carbon\Carbon;
+// Accessors と Mutatorsの機能追記
+use Illuminate\Database\Eloquent\Casts\Attribute;
+
 
 class Conference extends Model
 {
@@ -19,4 +24,26 @@ class Conference extends Model
         'end_date',
         'is_visible',
     ];
+
+    // Accessors と Mutatorsの実装
+    protected function eventDate(): Attribute
+    {
+       return Attribute::make(
+            get: fn () => Carbon::parse($this->start_date)->format('Y年m月d日'),
+       ); 
+    }
+
+    protected function startTime(): Attribute
+    {
+       return Attribute::make(
+            get: fn () => Carbon::parse($this->start_date)->format('H時i分'),
+       ); 
+    }
+
+    protected function endTIme(): Attribute
+    {
+       return Attribute::make(
+            get: fn () => Carbon::parse($this->end_date)->format('H時i分'),
+       ); 
+    }
 }

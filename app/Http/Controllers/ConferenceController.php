@@ -91,7 +91,18 @@ class ConferenceController extends Controller
      */
     public function show(Conference $conference)
     {
-        //
+        // 以下の$conferenceはindex側の情報を取得
+        $conference = Conference::findOrFail($conference->id);
+        // Accessors と Mutatorsの設定を追記 
+        $eventDate = $conference->eventDate;
+        $startTime = $conference->startTime;
+        $endTime = $conference->endTime;
+
+        // DB取得の確認
+        // dd($eventDate, $startTime, $endTime);
+
+        // compact内に上記の$eventDate・$startTime・$endTimeを追記
+        return view('manager.conferences.show', compact('conference','eventDate','startTime','endTime'));
     }
 
     /**

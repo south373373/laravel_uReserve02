@@ -35,7 +35,7 @@
                       <!-- Conferenceテーブルの情報を表示出力 -->
                       @foreach($conferences as $conference)
                       <tr>
-                        <td class="px-4 py-3">{{ $conference->name }}</td>
+                        <td class="text-blue-500 px-4 py-3"><a href="{{ route('conferences.show',['conference' => $conference->id ])}}">{{ $conference->name }}</a></td>
                         <td class="px-4 py-3">{{ $conference->start_date }}</td>
                         <td class="px-4 py-3">{{ $conference->end_date }}</td>
                         <td class="px-4 py-3">後ほど作る</td>
