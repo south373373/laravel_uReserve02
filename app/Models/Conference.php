@@ -33,6 +33,14 @@ class Conference extends Model
        ); 
     }
 
+    // 上記の eventDateとは表示形式を変更
+    protected function editEventDate(): Attribute
+    {
+       return Attribute::make(
+            get: fn () => Carbon::parse($this->start_date)->format('Y-m-d'),
+       ); 
+    }
+
     protected function startTime(): Attribute
     {
        return Attribute::make(

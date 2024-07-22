@@ -31,6 +31,7 @@ Route::prefix('manager')
     // });
 
     // Conference用
+    Route::get('conferences/past', [ConferenceController::class, 'past'])->name('conferences.past'); 
     Route::resource('conferences', ConferenceController::class); 
 });
 

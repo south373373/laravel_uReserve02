@@ -81,9 +81,12 @@
                                     非表示
                                 @endif
                             </div>
-                            <x-primary-button class="ms-3">
-                                編集する
-                            </x-primary-button>
+                            <!-- 過去のイベント一覧であれば、ボタンは非表示 -->
+                            @if($conference->eventDate >= \Carbon\Carbon::today()->format('Y年m月d日') )
+                                <x-primary-button class="ms-3">
+                                    編集する
+                                </x-primary-button>
+                            @endif
                         </div>
                     </form>
                 </div>

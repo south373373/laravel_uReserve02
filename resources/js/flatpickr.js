@@ -26,8 +26,8 @@ const setting = {
     // 時間範囲指定
     minTime: "10:00",
     maxTime: "20:00",
-    // 既定値
-    defaultDate: "10:00",
+    // 既定値(編集時に影響するため一旦コメント)
+    // defaultDate: "10:00",
     // calendar用設定
     minuteIncrement: 30
 }

@@ -155,7 +155,8 @@ return [
         'event_date' => 'イベントの日付',
         'start_time' => '開始時間',
         'end_time' => '終了時間',
-        'max_people' => '定員人数'
+        'max_people' => '定員人数',
+        'is_visible' => '表示・非表示'
     ],
 ];
 

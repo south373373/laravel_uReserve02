@@ -22,6 +22,17 @@ class ConferenceService
         return $check;    
     }
 
+    // 引数の変数名は任意
+    // - 重複のチェック詳細用 - 数量(重複しているイベントの数を確認)
+    public static function countEventDuplication($eventDate, $startTime, $endTime){
+        // 重複のチェック詳細
+        $check = Conference::whereDate('start_date', $eventDate)
+            ->whereTime('end_date', '>', $startTime)
+            ->whereTime('start_date', '<', $endTime)
+            ->count();
+        return $check;    
+    }
+
     // - 日付処理の機能用
     public static function joinDateAndTime($date, $time){
         $join = $date . " " . $time;
