@@ -22,6 +22,10 @@
                     <x-nav-link :href="route('conferences.index')" :active="request()->routeIs('conferences.index')">
                             イベント管理
                     </x-nav-link>
+                    <!-- 論理削除実施の対象データ一覧 -->
+                    <x-nav-link :href="route('conferences.trashed')" :active="request()->routeIs('conferences.trashed')">
+                            無効イベント一覧
+                    </x-nav-link>
                     @endcan
                 </div>
             </div>
@@ -84,6 +88,9 @@
             @can('manager-higher')
             <x-responsive-nav-link :href="route('conferences.index')" :active="request()->routeIs('conferences.index')">
                 イベント管理
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('conferences.trashed')" :active="request()->routeIs('conferences.trashed')">
+                無効イベント一覧
             </x-responsive-nav-link>
             @endcan
         </div>

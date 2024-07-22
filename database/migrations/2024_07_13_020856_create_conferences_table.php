@@ -23,6 +23,8 @@ return new class extends Migration
             $table->boolean('is_visible');
 
             $table->timestamps();
+            // 削除用columnの追記
+            $table->softDeletes();
         });
     }
 

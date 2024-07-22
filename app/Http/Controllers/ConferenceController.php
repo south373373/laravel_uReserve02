@@ -198,9 +198,48 @@ class ConferenceController extends Controller
         return view('manager.conferences.past', compact('conferences'));
     }
 
+    // 論理削除
     public function destroy(Conference $conference)
     {
-        //
+        // データ取得の確認用
+        // dd('削除処理');
+
+        // softDleteの処理
+        Conference::findOrFail($conference->id)
+        ->delete();
+
+        // flashメッセージを設定
+        session()->flash('status', '削除しました');
+
+        return to_route('conferences.index');
+
     }
 
+    // 論理削除データの一覧
+    public function trashed()
+    {
+        $trashedConferences = Conference::onlyTrashed()->paginate(10);
+
+        return view('manager.conferences.trashed', compact('trashedConferences'));
+    }
+
+    // 論理削除データからの復旧処理
+    public function restore($id)
+    {
+        $conference = Conference::withTrashed()->findOrFail($id);
+        $conference->restore();
+        
+        session()->flash('status', 'イベント管理へ戻しましたので、ご確認ください');
+        return to_route('conferences.trashed');
+    }
+
+    // 物理削除の実施処理
+    public function forceDestroy($id)
+    {
+        $conference = Conference::withTrashed()->findOrFail($id);
+        $conference->forceDelete();
+
+        session()->flash('status', '完全に削除しました');
+        return to_route('conferences.trashed');
+    }
 }

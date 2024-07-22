@@ -6,7 +6,8 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <!-- <div class="max-w-7xl mx-auto sm:px-6 lg:px-8"> -->
+        <div class="max-w-8xl mx-auto sm:px-6 lg:px-20">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">                
                 <div class="max-w-2xl py-4 mx-auto">
                     <!-- validationのエラー出力設定 -->

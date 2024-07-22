@@ -8,11 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 // Accessors と Mutatorsの機能追記
 use Illuminate\Database\Eloquent\Casts\Attribute;
-
+// 削除用の機能追記
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Conference extends Model
 {
-    use HasFactory;
+    // softDeletesを追記
+    use HasFactory, SoftDeletes;
 
     // 追記分
     // Conference::create()で保存のために追記
