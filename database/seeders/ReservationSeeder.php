@@ -36,6 +36,12 @@ class ReservationSeeder extends Seeder
                 'conference_id' => 2,
                 'number_of_people' => 2,
                 'canceled_date' => null
+            ],
+            [
+                'user_id' => 2,
+                'conference_id' => 2,
+                'number_of_people' => 2,
+                'canceled_date' => '2022-03-01 00:00:00'
             ]            
         ]);
     }

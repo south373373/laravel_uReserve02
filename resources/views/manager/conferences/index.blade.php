@@ -80,6 +80,7 @@
         </div>
     </div>
     <script>
+        // 削除用の確認メッセージ
         function deletePost(e){
             'use strict';
             if(confirm('本当に削除してもよろしいでしょうか？')){

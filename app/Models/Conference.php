@@ -59,4 +59,11 @@ class Conference extends Model
             get: fn () => Carbon::parse($this->end_date)->format('H時i分'),
        ); 
     }
+
+    // Userモデルとのリレーション設定(1対)
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'reservations')
+        ->withPivot('id', 'number_of_people', 'canceled_date');
+    }
 }

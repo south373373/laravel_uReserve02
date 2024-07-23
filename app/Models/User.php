@@ -6,6 +6,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+// 他Modelsの追記
+use App\Models\Conference;
+
 
 class User extends Authenticatable
 {
@@ -44,5 +47,12 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // Conferenceモデルとのリレーション設定(多対多)
+    public function conferences()
+    {
+        return $this->belongsToMany(Conference::class, 'reservations')
+        ->withPivot('id', 'number_of_people', 'canceled_date');
     }
 }

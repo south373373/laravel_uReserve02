@@ -74,7 +74,7 @@
                             @method('DELETE')
                                 <td class="text-red-500 px-4 py-3">
                                 <x-danger-button class="ms-3">
-                                    <a href="#" data-id="{{ $conference->id }}" onclick="deletePost(this)">完全削除</a>
+                                    <a href="#" data-id="{{ $conference->id }}" onclick="deleteForce(this)">完全削除</a>
                                 </x-danger-button>
                                 </td>
                         </form>
@@ -102,10 +102,10 @@
             }
         }
 
-        // 削除用の確認メッセージ
-        function deletePost(e){
+        // 完全削除用の確認メッセージ
+        function deleteForce(e){
             'use strict';
-            if(confirm('本当に削除してもよろしいでしょうか？')){
+            if(confirm('完全に削除してもよろしいでしょうか？')){
                 document.getElementById('delete_' + e.dataset.id).submit();
             }
         }

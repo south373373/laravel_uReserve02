@@ -21,6 +21,8 @@ class ConferenceController extends Controller
 
         // 予約数の合計queryの処理
         $reservedPeople = Reservation::select('conference_id', Reservation::raw('sum(number_of_people) as number_of_people'))
+        // cancelの場合、合計人数から外す。
+        ->whereNull('canceled_date')
         ->groupBy('conference_id');
         // 処理確認
         // dd($reservedPeople);
@@ -104,6 +106,30 @@ class ConferenceController extends Controller
     {
         // 以下の$conferenceはindex側の情報を取得
         $conference = Conference::findOrFail($conference->id);
+
+        // Userモデルとのリレーション設定
+        $users = $conference->users;
+        // 取得確認
+        // dd($conference, $users);
+
+        $reservations = [];
+
+        // Conferenceの1件を取得し、それに紐づくUserの情報を取得
+        foreach($users as $user)
+        {
+            $reservedInfo = [
+                'name' => $user->name,
+                // 中間テーブル(pivot)
+                'number_of_people' => $user->pivot->number_of_people,
+                'canceled_date' => $user->pivot->canceled_date,
+            ];
+            // $reservaitonsの配列に、$reservedInfoで定義した各要素を追加
+            array_push($reservations, $reservedInfo);
+        }
+        // dd($reservations);
+
+
+
         // Accessors と Mutatorsの設定を追記 
         $eventDate = $conference->eventDate;
         $startTime = $conference->startTime;
@@ -113,7 +139,8 @@ class ConferenceController extends Controller
         // dd($eventDate, $startTime, $endTime);
 
         // compact内に上記の$eventDate・$startTime・$endTimeを追記
-        return view('manager.conferences.show', compact('conference','eventDate','startTime','endTime'));
+        // Userモデルとのリレーション設定の「users」もcompactに追記
+        return view('manager.conferences.show', compact('conference','users','reservations','eventDate','startTime','endTime'));
     }
 
 
@@ -202,6 +229,8 @@ class ConferenceController extends Controller
         $today = Carbon::today();
 
         $reservedPeople = Reservation::select('conference_id', Reservation::raw('sum(number_of_people) as number_of_people'))
+        // cancelの場合、合計人数から外す。
+        ->whereNull('canceled_date')
         ->groupBy('conference_id');
 
         $conferences = Conference::leftjoinSub($reservedPeople, 'reservedPeople',
@@ -247,6 +276,8 @@ class ConferenceController extends Controller
         $today = Carbon::today();
         
         $reservedPeople = Reservation::select('conference_id', Reservation::raw('sum(number_of_people) as number_of_people'))
+        // cancelの場合、合計人数から外す。
+        ->whereNull('canceled_date')
         ->groupBy('conference_id');
         
         $trashedConferences = Conference::onlyTrashed()
