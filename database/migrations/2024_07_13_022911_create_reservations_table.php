@@ -16,7 +16,7 @@ return new class extends Migration
             // 追記分
             // 外部キー設定・同時更新設定
             $table->foreignId('user_id')->constrained()->onUpdate('cascade');
-            $table->foreignId('event_id')->constrained()->onUpdate('cascade');
+            $table->foreignId('conference_id')->constrained()->onUpdate('cascade');
             $table->integer('number_of_people');
             $table->datetime('canceled_date')->nullable();
 

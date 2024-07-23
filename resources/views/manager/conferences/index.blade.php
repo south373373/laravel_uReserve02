@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            イベント管理
+            本日以降のイベント一覧
         </h2>
     </x-slot>
 
@@ -44,7 +44,14 @@
                         <td class="text-blue-500 px-4 py-3"><a href="{{ route('conferences.show',['conference' => $conference->id ])}}">{{ $conference->name }}</a></td>
                         <td class="px-4 py-3">{{ $conference->start_date }}</td>
                         <td class="px-4 py-3">{{ $conference->end_date }}</td>
-                        <td class="px-4 py-3">後ほど作る</td>
+                        <!-- Reservationテーブルと外部結合のcolumnの情報を表示 -->
+                        <td class="px-4 py-3">
+                            @if(is_null($conference->number_of_people))
+                               0 
+                            @else
+                               {{ $conference->number_of_people }}
+                            @endif
+                        </td>
                         <td class="px-4 py-3">{{ $conference->max_people }}</td>
                         <td class="px-4 py-3">{{ $conference->is_visible }}</td>
                         <!-- 削除用 -->

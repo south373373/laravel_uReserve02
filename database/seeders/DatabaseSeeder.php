@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 // 追加分
 use App\Models\Conference;
+use App\Models\Reservation;
 
 class DatabaseSeeder extends Seeder
 {
@@ -22,12 +23,13 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
+        // Conference用ダミーデータのfactoryを挿入
+        Conference::factory(100)->create();
+
         // UserSeeder用のダミーデータを挿入
         $this->call([
             UserSeeder::class,
+            ReservationSeeder::class,
         ]);
-
-        // Conference用ダミーデータのfactoryを挿入
-        Conference::factory(100)->create();
     }
 }

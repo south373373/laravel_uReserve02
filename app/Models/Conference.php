@@ -10,6 +10,9 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 // 削除用の機能追記
 use Illuminate\Database\Eloquent\SoftDeletes;
+// 他Modelsの追記
+use App\Models\User;
+
 
 class Conference extends Model
 {

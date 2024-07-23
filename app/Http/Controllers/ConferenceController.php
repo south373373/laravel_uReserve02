@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreConferenceRequest;
 use App\Http\Requests\UpdateConferenceRequest;
 use App\Models\Conference;
+use App\Models\Reservation;
 // 追記分
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -17,13 +18,26 @@ class ConferenceController extends Controller
         //追記分
         // 本日の日付を取得
         $today = Carbon::today();
-        
+
+        // 予約数の合計queryの処理
+        $reservedPeople = Reservation::select('conference_id', Reservation::raw('sum(number_of_people) as number_of_people'))
+        ->groupBy('conference_id');
+        // 処理確認
+        // dd($reservedPeople);
+
         // conferencesテーブルの昇順・表示件数設定
         // 本日以降の日付のみが一覧に表示
-        $conferences = Conference::whereDate('start_date', '>=', $today)
+        $conferences = Conference::leftjoinSub($reservedPeople, 'reservedPeople',
+        function($join){
+            $join->on('conferences.id', '=', 'reservedPeople.conference_id');
+        })
+        ->whereDate('start_date', '>=', $today)
         ->orderBy('start_date','asc')
         ->paginate(10);
-        
+        // ->get();
+        // dd($conferences);
+
+
         // resources > views > managerを作成
         return view('manager.conferences.index',compact('conferences'));
     }
@@ -187,9 +201,18 @@ class ConferenceController extends Controller
         // 本日の日付を取得
         $today = Carbon::today();
 
-        $conferences = Conference::whereDate('start_date', '<', $today)
+        $reservedPeople = Reservation::select('conference_id', Reservation::raw('sum(number_of_people) as number_of_people'))
+        ->groupBy('conference_id');
+
+        $conferences = Conference::leftjoinSub($reservedPeople, 'reservedPeople',
+        function($join){
+            $join->on('conferences.id', '=', 'reservedPeople.conference_id');
+        })
+        ->whereDate('start_date', '<', $today)
         ->orderBy('start_date','desc')
         ->paginate(10);
+
+
         // $conferences = DB::table('conferences')
         // ->whereDate('start_date', '<', $today)
         // ->orderBy('start_date','desc')
@@ -218,9 +241,26 @@ class ConferenceController extends Controller
     // 論理削除データの一覧
     public function trashed()
     {
-        $trashedConferences = Conference::onlyTrashed()->paginate(10);
+        //index・pastに併せて、Reservationテーブルの外部結合のコードを追記。 
 
+        // 本日の日付を取得
+        $today = Carbon::today();
+        
+        $reservedPeople = Reservation::select('conference_id', Reservation::raw('sum(number_of_people) as number_of_people'))
+        ->groupBy('conference_id');
+        
+        $trashedConferences = Conference::onlyTrashed()
+        ->leftJoinSub($reservedPeople, 'reservedPeople', function($join){
+            $join->on('conferences.id', '=', 'reservedPeople.conference_id');
+        })
+        ->orderBy('start_date','asc')
+        ->paginate(10);
+        
         return view('manager.conferences.trashed', compact('trashedConferences'));
+
+        // 上記編集前のコード
+        // $trashedConferences = Conference::onlyTrashed()->paginate(10);
+        // return view('manager.conferences.trashed', compact('trashedConferences'));
     }
 
     // 論理削除データからの復旧処理

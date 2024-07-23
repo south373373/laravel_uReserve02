@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Reservation;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 // 追記分
@@ -16,20 +17,26 @@ class ReservationSeeder extends Seeder
      */
     public function run(): void
     {
-        //dummy data
-        // DB::table('reservations')->insert([
-        //     [
-        //         'user_id' => 1,
-        //         'event_id' => 1,
-        //         'number_of_people' => 5,
-        //         'canceled_date' => null
-        //     ],
-        //     [
-        //         'user_id' => 2,
-        //         'event_id' => 1,
-        //         'number_of_people' => 5,
-        //         'canceled_date' => null
-        //     ]
-        // ]);
+        // dummy data
+        Reservation::insert([
+            [
+                'user_id' => 1,
+                'conference_id' => 1,
+                'number_of_people' => 5,
+                'canceled_date' => null
+            ],
+            [
+                'user_id' => 2,
+                'conference_id' => 1,
+                'number_of_people' => 3,
+                'canceled_date' => null
+            ],
+            [
+                'user_id' => 1,
+                'conference_id' => 2,
+                'number_of_people' => 2,
+                'canceled_date' => null
+            ]            
+        ]);
     }
 }
