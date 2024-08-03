@@ -39,9 +39,19 @@ class ConferenceController extends Controller
         // ->get();
         // dd($conferences);
 
+        // $conferences = Conference::whereIsVisible(0)
+        //     ->whereDate('start_date', '>=', Carbon::today())
+        //     ->OrderBy('start_date', 'asc')
+        //     ->paginate();
 
-        // resources > views > managerを作成
+        // // 出力確認
+        // // ->get();
+        // // dd($conferences);
+
+
+        // // resources > views > managerを作成
         return view('manager.conferences.index',compact('conferences'));
+        // return view('manager.conferences.index', ['conferences' => Conference::afterToday()]);
     }
 
 

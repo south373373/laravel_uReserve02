@@ -21,6 +21,8 @@ return new class extends Migration
             $table->datetime('canceled_date')->nullable();
 
             $table->timestamps();
+            // 削除用columnの追記
+            $table->softDeletes();
         });
     }
 

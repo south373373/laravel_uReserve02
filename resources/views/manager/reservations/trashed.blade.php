@@ -1,7 +1,9 @@
+reservations.trashed
+
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            本日以降のイベント一覧
+            無効予約一覧
         </h2>
     </x-slot>
 
@@ -20,8 +22,8 @@
               @endif
 
               <div class="flex justify-between">
-                <button onclick="location.href='{{ route('conferences.past')}}'" class="flex mb-4 ml-auto text-white bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded">過去のイベント一覧</button>
-                <button onclick="location.href='{{ route('conferences.create')}}'" class="flex mb-4 ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">新規登録</button>
+                {{-- <button onclick="location.href='{{ route('reservations.past')}}'" class="flex mb-4 ml-auto text-white bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded">過去のイベント一覧</button> --}}
+                <button onclick="location.href='{{ route('reservations.create')}}'" class="flex mb-4 ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">新規登録</button>
               </div>
                 <div class="w-full mx-auto overflow-auto">
                   <table class="table-auto w-full text-left whitespace-no-wrap">
@@ -33,44 +35,57 @@
                         <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">予約人数</th>
                         <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">定員人数</th>
                         <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">表示・非表示</th>
+                        <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">削除日</th>
+                        <!-- 復旧用 -->
+                        <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100"> - </th>
                         <!-- 削除用 -->
                         <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100"> - </th>
                       </tr>
                     </thead>
                     <tbody>
                       <!-- Conferenceテーブルの情報を表示出力 -->
-                      @foreach($conferences as $conference)
+                      @foreach($trashedConferences as $conference)
                       <tr>
-                        <td class="text-blue-500 px-4 py-3"><a href="{{ route('conferences.show',['conference' => $conference->id ])}}">{{ $conference->name }}</a></td>
-                        <td class="px-4 py-3">{{ $conference->start_date }}</td>
-                        <td class="px-4 py-3">{{ $conference->end_date }}</td>
+                        <td class="px-4 py-3">{{ $reservation->name }}</a></td>
+                        <td class="px-4 py-3">{{ $reservation->start_date }}</td>
+                        <td class="px-4 py-3">{{ $reservation->end_date }}</td>
                         <!-- Reservationテーブルと外部結合のcolumnの情報を表示 -->
                         <td class="px-4 py-3">
-                        <!-- 指摘箇所の追記 -->
-                            @if(is_null($conference->number_of_people))
+                            @if(is_null($reservation->number_of_people))
                                0 
                             @else
-                               {{ $conference->number_of_people }}
+                               {{ $reservation->number_of_people }}
                             @endif
                         </td>
-                        <td class="px-4 py-3">{{ $conference->max_people }}</td>
-                        <td class="px-4 py-3">{{ $conference->is_visible }}</td>
-                        <!-- 削除用 -->
-                        <form id="delete_{{$conference->id}}" method="post" action="{{ route('conferences.destroy', ['conference' => $conference->id] )}}">
+                        <td class="px-4 py-3">{{ $reservation->max_people }}</td>
+                        <td class="px-4 py-3">{{ $reservation->is_visible }}</td>
+                        <td class="px-4 py-3">{{ $reservation->deleted_at }}</td>
+                        <!-- 復旧用 -->
+                        <form id="restore_{{$reservation->id}}" method="post" action="{{ route('reservations.restore', ['reservation' => $reservation->id] )}}">
                             @csrf
-                            @method('delete')
-                            <td class="text-red-500 px-4 py-3">
-                                <x-danger-button class="ms-3">
-                                    <a href="#" data-id="{{ $conference->id }}" onclick="deletePost(this)">削除</a>
-                                </x-danger-button>
+                            @method('PATCH')
+                            <td class="text-blue-500 px-4 py-3">
+                                <x-thirdary-button class="ms-3">
+                                    <a href="#" data-id="{{ $reservation->id }}" onclick="restorePost(this)">戻す</a>
+                                </x-thirdary-button>
                             </td>
+                        </form>
+                        <!-- 削除用 -->
+                        <form id="delete_{{$reservation->id}}" method="post" action="{{ route('reservations.forceDestroy', ['reservation' => $reservation->id] )}}">
+                            @csrf
+                            @method('DELETE')
+                                <td class="text-red-500 px-4 py-3">
+                                <x-danger-button class="ms-3">
+                                    <a href="#" data-id="{{ $reservation->id }}" onclick="deleteForce(this)">完全削除</a>
+                                </x-danger-button>
+                                </td>
                         </form>
                       </tr>
                       @endforeach
                     </tbody>
                   </table>
                   <!-- ページネーションの設定 -->
-                  {{ $conferences->links() }}
+                  {{ $trashedConferences->links() }}
                 </div>
                 <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
 
@@ -81,10 +96,18 @@
         </div>
     </div>
     <script>
-        // 削除用の確認メッセージ
-        function deletePost(e){
+        // 復旧用の確認メッセージ
+        function restorePost(e){
             'use strict';
-            if(confirm('本当に削除してもよろしいでしょうか？')){
+            if(confirm('本当にイベント管理へ戻してもよろしいでしょうか？')){
+                document.getElementById('restore_' + e.dataset.id).submit();
+            }
+        }
+
+        // 完全削除用の確認メッセージ
+        function deleteForce(e){
+            'use strict';
+            if(confirm('完全に削除してもよろしいでしょうか？')){
                 document.getElementById('delete_' + e.dataset.id).submit();
             }
         }

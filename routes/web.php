@@ -6,10 +6,15 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ConferenceController;
 use App\Http\Controllers\ReservationController;
 use App\Models\Conference;
+use App\Http\Controllers\CalendarController;
+
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+// blade用の記載
+// Route::get('/', [CalendarController::class, 'index'])->name('calendar.index');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -43,6 +48,18 @@ Route::prefix('manager')
     // Conference用
     Route::get('conferences/past', [ConferenceController::class, 'past'])->name('conferences.past'); 
     Route::resource('conferences', ConferenceController::class); 
+
+
+    // Reservation用-論理削除・完全削除
+    Route::get('reservations/trashed', [ReservationController::class, 'trashed'])->name('reservations.trashed');
+    Route::delete('reservations/{reservation}/force', [ReservationController::class, 'forceDestroy'])->name('reservations.forceDestroy');
+    // Reservation用-論理削除から復旧
+    Route::patch('reservations/{reservation}/restore', [ReservationController::class, 'restore'])->name('reservations.restore');
+    // Reservation用
+    // Route::get('reservations/past', [ReservationController::class, 'past'])->name('reservations.past'); 
+    Route::resource('reservations', ReservationController::class); 
+
+
 });
 
 // user側

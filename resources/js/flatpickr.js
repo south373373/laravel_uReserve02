@@ -11,8 +11,10 @@ flatpickr("#event_date", {
 
 flatpickr("#calendar", {
     "locale": Japanese,
+
     // 本日以降
-    minDate: "today",
+    // minDate: "today",　//ここをコメントする事で過去の日付選択が可能
+
     // 30日間迄
     maxDate: new Date().fp_incr(30)
 });

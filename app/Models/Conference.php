@@ -66,4 +66,20 @@ class Conference extends Model
         return $this->belongsToMany(User::class, 'reservations')
         ->withPivot('id', 'number_of_people', 'canceled_date');
     }
+
+    // 指摘箇所の追記分
+    // public function reservations()
+    // {
+    //     return $this->hasMany(Reservation::class)->whereNull('canceled_date');
+    // }
+
+    // protected function scopeAfterToday($query)
+    // {
+    //     return $query
+    //         ->whereIsVisible(0)
+    //         ->whereDate('start_date', '>=', Carbon::now())
+    //         ->OrderBy('start_date', 'asc')
+    //         ->paginate();
+    // }
+
 }
