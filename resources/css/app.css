@@ -5,7 +5,9 @@
 @tailwind components;
 @tailwind utilities;
 
-/* calendar幅を固定 */
+/* calendar幅を固定
+   幅を狭めると画面下に左右のスクロールバーが表示
+*/
 .event-calendar{
     width: 1000px;
 }
