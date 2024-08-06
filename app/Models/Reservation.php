@@ -21,6 +21,7 @@ class Reservation extends Model
 
     // 追記分
     // Conference::create()で保存のために追記
+    // withの機能を追記するだけで、withを省く事が可能。
     protected $fillable = [
         'user_id',
         'conference_id',

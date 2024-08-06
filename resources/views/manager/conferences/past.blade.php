@@ -41,11 +41,9 @@
                         <td class="px-4 py-3">{{ $conference->end_date }}</td>
                         <!-- Reservationテーブルと外部結合のcolumnの情報を表示 -->
                         <td class="px-4 py-3">
-                        @if(is_null($conference->number_of_people))
-                               0 
-                            @else
-                               {{ $conference->number_of_people }}
-                            @endif                            
+                            <!-- index同様に
+                                 Reservationの「予約人数」の合計値を出力。 -->
+                            {{ $conference->reservations->sum('number_of_people') }}
                         </td>
                         <td class="px-4 py-3">{{ $conference->max_people }}</td>
                         <td class="px-4 py-3">{{ $conference->is_visible }}</td>

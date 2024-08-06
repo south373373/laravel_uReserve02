@@ -49,8 +49,7 @@ class ReservationController extends Controller
 
         // flashメッセージを設定
         session()->flash('status', '予約が作成されました');
-
-        return to_route('manager.reservations.index');        
+        return redirect()->route('manager.reservations.index');        
     }
 
     /**
@@ -93,8 +92,7 @@ class ReservationController extends Controller
 
         // flashメッセージを設定
         session()->flash('status', '予約人数が更新されました');
-
-        return to_route('reservations.index', $id);                
+        return redirect()->route('reservations.index', $id);                
 
     }
 
@@ -109,8 +107,7 @@ class ReservationController extends Controller
 
         // flashメッセージを設定
         session()->flash('status', '予約が削除されました');
-
-        return to_route('manager.reservations.index');                
+        return redirect()->route('manager.reservations.index');                
 
     }
 
@@ -126,8 +123,9 @@ class ReservationController extends Controller
         $reservation = Reservation::withTrashed()->findOrFail($id);
         $reservation->restore();
         
+        // flashメッセージを設定
         session()->flash('status', '予約管理へ戻しましたので、ご確認ください');
-        return to_route('manager.reservations.trashed');
+        return redirect()->route('manager.reservations.trashed');
     }
 
     // 物理削除の実施処理
@@ -136,7 +134,8 @@ class ReservationController extends Controller
         $reservation = Reservation::withTrashed()->findOrFail($id);
         $reservation->forceDelete();
 
+        // flashメッセージを設定
         session()->flash('status', '完全に削除しました');
-        return to_route('manager.reservations.trashed');
+        return redirect()->route('manager.reservations.trashed');
     }
 }

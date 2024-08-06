@@ -15,43 +15,43 @@ class ConferenceController extends Controller
 {
     public function index()
     {
-        //追記分
-        // 本日の日付を取得
-        $today = Carbon::today();
+        // //追記分
+        // // 本日の日付を取得
+        // $today = Carbon::today();
 
-        // 予約数の合計queryの処理
-        $reservedPeople = Reservation::select('conference_id', Reservation::raw('sum(number_of_people) as number_of_people'))
-        // cancelの場合、合計人数から外す。
-        ->whereNull('canceled_date')
-        ->groupBy('conference_id');
-        // 処理確認
-        // dd($reservedPeople);
+        // // 予約数の合計queryの処理
+        // $reservedPeople = Reservation::select('conference_id', Reservation::raw('sum(number_of_people) as number_of_people'))
+        // // cancelの場合、合計人数から外す。
+        // ->whereNull('canceled_date')
+        // ->groupBy('conference_id');
+        // // 処理確認
+        // // dd($reservedPeople);
 
-        // conferencesテーブルの昇順・表示件数設定
-        // 本日以降の日付のみが一覧に表示
-        $conferences = Conference::leftjoinSub($reservedPeople, 'reservedPeople',
-        function($join){
-            $join->on('conferences.id', '=', 'reservedPeople.conference_id');
-        })
-        ->whereDate('start_date', '>=', $today)
-        ->orderBy('start_date','asc')
-        ->paginate(10);
-        // ->get();
-        // dd($conferences);
+        // // conferencesテーブルの昇順・表示件数設定
+        // // 本日以降の日付のみが一覧に表示
+        // $conferences = Conference::leftjoinSub($reservedPeople, 'reservedPeople',
+        // function($join){
+        //     $join->on('conferences.id', '=', 'reservedPeople.conference_id');
+        // })
+        // ->whereDate('start_date', '>=', $today)
+        // ->orderBy('start_date','asc')
+        // ->paginate(10);
+        // // ->get();
+        // // dd($conferences);
 
         // $conferences = Conference::whereIsVisible(0)
         //     ->whereDate('start_date', '>=', Carbon::today())
         //     ->OrderBy('start_date', 'asc')
         //     ->paginate();
 
-        // // 出力確認
-        // // ->get();
-        // // dd($conferences);
+        // // // 出力確認
+        // // // ->get();
+        // // // dd($conferences);
 
 
-        // // resources > views > managerを作成
-        return view('manager.conferences.index',compact('conferences'));
-        // return view('manager.conferences.index', ['conferences' => Conference::afterToday()]);
+        // resources > views > managerを作成
+        // return view('manager.conferences.index',compact('conferences'));
+        return view('manager.conferences.index', ['conferences' => Conference::afterToday()]);
     }
 
 
@@ -108,7 +108,7 @@ class ConferenceController extends Controller
         // flashメッセージを設定
         session()->flash('status', '登録しました');
 
-        return to_route('conferences.index');
+        return redirect()->route('conferences.index');
     }
 
 
@@ -228,36 +228,39 @@ class ConferenceController extends Controller
         // flashメッセージを設定
         session()->flash('status', '更新しました');
 
-        return to_route('conferences.index');
+        return redirect()->route('conferences.index');
     }
 
 
     // 新規にpast(過去一覧用)のmethodを作成
     public function past()
     {
-        // 本日の日付を取得
-        $today = Carbon::today();
+        // // 本日の日付を取得
+        // $today = Carbon::today();
 
-        $reservedPeople = Reservation::select('conference_id', Reservation::raw('sum(number_of_people) as number_of_people'))
-        // cancelの場合、合計人数から外す。
-        ->whereNull('canceled_date')
-        ->groupBy('conference_id');
+        // $reservedPeople = Reservation::select('conference_id', Reservation::raw('sum(number_of_people) as number_of_people'))
+        // // cancelの場合、合計人数から外す。
+        // ->whereNull('canceled_date')
+        // ->groupBy('conference_id');
 
-        $conferences = Conference::leftjoinSub($reservedPeople, 'reservedPeople',
-        function($join){
-            $join->on('conferences.id', '=', 'reservedPeople.conference_id');
-        })
-        ->whereDate('start_date', '<', $today)
-        ->orderBy('start_date','desc')
-        ->paginate(10);
-
-
-        // $conferences = DB::table('conferences')
+        // $conferences = Conference::leftjoinSub($reservedPeople, 'reservedPeople',
+        // function($join){
+        //     $join->on('conferences.id', '=', 'reservedPeople.conference_id');
+        // })
         // ->whereDate('start_date', '<', $today)
         // ->orderBy('start_date','desc')
         // ->paginate(10);
 
-        return view('manager.conferences.past', compact('conferences'));
+
+        // // $conferences = DB::table('conferences')
+        // // ->whereDate('start_date', '<', $today)
+        // // ->orderBy('start_date','desc')
+        // // ->paginate(10);
+
+        // return view('manager.conferences.past', compact('conferences'));
+
+        // index同様に以下の1行にて当日以前(過去の日付)を一覧表示
+        return view('manager.conferences.index', ['conferences' => Conference::beforeToday()]);
     }
 
     // 論理削除
@@ -273,8 +276,7 @@ class ConferenceController extends Controller
         // flashメッセージを設定
         session()->flash('status', '削除しました');
 
-        return to_route('conferences.index');
-
+        return redirect()->route('conferences.index');
     }
 
     // 論理削除データの一覧
@@ -311,7 +313,7 @@ class ConferenceController extends Controller
         $conference->restore();
         
         session()->flash('status', 'イベント管理へ戻しましたので、ご確認ください');
-        return to_route('conferences.trashed');
+        return redirect()->route('conferences.trashed');
     }
 
     // 物理削除の実施処理
@@ -321,6 +323,6 @@ class ConferenceController extends Controller
         $conference->forceDelete();
 
         session()->flash('status', '完全に削除しました');
-        return to_route('conferences.trashed');
+        return redirect()->route('conferences.trashed');
     }
 }

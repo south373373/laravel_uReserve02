@@ -60,7 +60,7 @@ class Conference extends Model
        ); 
     }
 
-    // Userモデルとのリレーション設定(1対)
+    // Userモデルとのリレーション設定(1対多)
     public function users()
     {
         return $this->belongsToMany(User::class, 'reservations')
@@ -68,18 +68,30 @@ class Conference extends Model
     }
 
     // 指摘箇所の追記分
-    // public function reservations()
-    // {
-    //     return $this->hasMany(Reservation::class)->whereNull('canceled_date');
-    // }
+    // - 「canceled_date」のNullの値になっているレコードを取得。
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class)->whereNull('canceled_date');
+    }
 
-    // protected function scopeAfterToday($query)
-    // {
-    //     return $query
-    //         ->whereIsVisible(0)
-    //         ->whereDate('start_date', '>=', Carbon::now())
-    //         ->OrderBy('start_date', 'asc')
-    //         ->paginate();
-    // }
+    // 指摘箇所の追記分
+    // - 本日以降のイベントにてクエリを実行    
+    protected function scopeAfterToday($query)
+    {
+        return $query
+            // ->whereIsVisible(1)
+            ->whereDate('start_date', '>=', Carbon::now())
+            ->OrderBy('start_date', 'asc')
+            ->paginate();
+    }
 
+    // - 本日以降のイベントにてクエリを実行    
+    protected function scopeBeforeToday($query)
+    {
+        return $query
+            // ->whereIsVisible(1)
+            ->whereDate('start_date', '<=', Carbon::now())
+            ->OrderBy('start_date', 'asc')
+            ->paginate();
+    }    
 }
