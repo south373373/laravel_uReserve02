@@ -11,6 +11,7 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
+
         <!-- Scripts -->
         @vite(['resources/css/app.css', 
         'resources/js/app.js', 
@@ -18,10 +19,13 @@
 
     </head>
     <body class="font-sans antialiased">
-        
         <!-- resources > calendar > indexの読み込み -->
-        <!-- @include('calendar.index') -->
-        @yield('content')
+        <!-- 変数を定義していない状態のviewを表示する場合 -->
+        {{-- <x-calendar /> --}}
+
+        <!-- 変数を定義している状態のviewを表示する場合 -->
+        <x-calendar :currentDate="$currentDate" :currentWeek="$currentWeek" />
+        
         <script src="{{ mix('js/flatpickr.js')}}"></script>
         <!-- @livewireScriptsは無しで設定 -->
     </body>

@@ -107,7 +107,6 @@ class ConferenceController extends Controller
 
         // flashメッセージを設定
         session()->flash('status', '登録しました');
-
         return redirect()->route('conferences.index');
     }
 

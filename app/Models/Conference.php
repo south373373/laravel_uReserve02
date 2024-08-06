@@ -75,7 +75,7 @@ class Conference extends Model
     }
 
     // 指摘箇所の追記分
-    // - 本日以降のイベントにてクエリを実行    
+    // - 本日以降のイベントにてクエリを実行(index)
     protected function scopeAfterToday($query)
     {
         return $query
@@ -85,7 +85,7 @@ class Conference extends Model
             ->paginate();
     }
 
-    // - 本日以降のイベントにてクエリを実行    
+    // - 本日以前のイベントにてクエリを実行(past)
     protected function scopeBeforeToday($query)
     {
         return $query
@@ -93,5 +93,5 @@ class Conference extends Model
             ->whereDate('start_date', '<=', Carbon::now())
             ->OrderBy('start_date', 'asc')
             ->paginate();
-    }    
+    }
 }

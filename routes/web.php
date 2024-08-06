@@ -8,10 +8,13 @@ use App\Http\Controllers\ReservationController;
 use App\Models\Conference;
 use App\Http\Controllers\CalendarController;
 
+// resources > views配下の
+// calendar.blade.php直下のファイルを参照
+// Route::get('/', function () {
+//     return view('calendar');
+// });
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [CalendarController::class, 'index'])->name('calendar.index');
 
 // blade用の記載
 // Route::get('/', [CalendarController::class, 'index'])->name('calendar.index');
