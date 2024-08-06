@@ -8,16 +8,16 @@ use App\Http\Controllers\ReservationController;
 use App\Models\Conference;
 use App\Http\Controllers\CalendarController;
 
-// resources > views配下の
-// calendar.blade.php直下のファイルを参照
+// < blade用の記載 >
+// resources > views配下のcalendar.blade.php直下のファイルを参照
+// - 変数を定義しない場合は以下の記載。
 // Route::get('/', function () {
 //     return view('calendar');
 // });
 
+// - 変数を定義する場合は以下の記載。
 Route::get('/', [CalendarController::class, 'index'])->name('calendar.index');
 
-// blade用の記載
-// Route::get('/', [CalendarController::class, 'index'])->name('calendar.index');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
