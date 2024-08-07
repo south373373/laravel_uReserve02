@@ -16,7 +16,10 @@ use App\Http\Controllers\CalendarController;
 // });
 
 // - 変数を定義する場合は以下の記載。
-Route::get('/', [CalendarController::class, 'index'])->name('calendar.index');
+// Route::get('/', [CalendarController::class, 'index'])->name('calendar.index');
+
+// - データティッカーのテキストボックスにより日付選択から1週間分の日付を表示
+Route::match(['get', 'post'], '/', [CalendarController::class, 'index'])->name('calendar.index');
 
 
 Route::get('/dashboard', function () {
