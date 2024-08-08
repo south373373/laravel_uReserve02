@@ -12,27 +12,33 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
+                    <!-- ユーザー会員のみアクセス可能 -->
+                    @auth
+                        @if(Auth::user()->role > 0 && Auth::user()->role <= 9)
+                        <x-nav-link :href="route('user.dashboard')" :active="request()->routeIs('user.dashboard')">
+                            イベントカレンダー_[navigation.blade.php]
+                        </x-nav-link>
+                        @endif
+                    @endauth
 
+                    
                     <!-- 管理責任者以上でアクセス可能 -->
                     <!-- ※「Responsive Navigation Menu」も同様に設定 -->
                     @can('manager-higher')
                     <x-nav-link :href="route('conferences.index')" :active="request()->routeIs('conferences.index')">
-                            イベント管理
+                        イベント管理
                     </x-nav-link>
                     <!-- イベント管理-論理削除実施の対象データ一覧 -->
                     <x-nav-link :href="route('conferences.trashed')" :active="request()->routeIs('conferences.trashed')">
-                            無効イベント一覧
+                        無効イベント一覧
                     </x-nav-link>
                     <!-- 予約状況管理-論理削除実施の対象データ一覧 -->
                     <x-nav-link :href="route('reservations.index')" :active="request()->routeIs('reservations.inde')">
-                            予約一覧
+                        予約一覧
                     </x-nav-link>
                     <!-- 予約状況管理-論理削除実施の対象データ一覧 -->
                     <x-nav-link :href="route('reservations.trashed')" :active="request()->routeIs('reservations.trashed')">
-                            無効予約一覧
+                        無効予約一覧
                     </x-nav-link>
                     @endcan
                 </div>
@@ -107,6 +113,16 @@
                 無効予約一覧
             </x-responsive-nav-link>
             @endcan
+
+            <!-- ユーザー会員のみアクセス可能 -->
+            @auth
+                @if(Auth::user()->role > 0 && Auth::user()->role <= 9)
+                <x-nav-link :href="route('user.dashboard')" :active="request()->routeIs('user.dashboard')">
+                イベントカレンダー_[navigation.blade.php]
+                </x-nav-link>
+                @endif
+            @endauth
+
         </div>
 
         <!-- Responsive Settings Options -->

@@ -21,10 +21,10 @@ use App\Http\Controllers\CalendarController;
 // - データティッカーのテキストボックスにより日付選択から1週間分の日付を表示
 Route::match(['get', 'post'], '/', [CalendarController::class, 'index'])->name('calendar.index');
 
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// 今回は不要なため、コメント。
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -69,11 +69,11 @@ Route::prefix('manager')
 });
 
 // user側
-Route::middleware('can:user-higher')
+Route::middleware(['auth', 'can:user-higher'])
 ->group(function(){
-    Route::get('index', function(){
-        dd('user');
-    });
+    // Route::match(['get', 'post'], '/', [CalendarController::class, 'index'])->name('index')->middleware('auth');
+    Route::get('/dashboard', [ReservationController::class, 'dashboard'])->name('dashboard')->middleware('auth');
+    Route::get('/user/dashboard', [ReservationController::class, 'dashboard'])->name('user.dashboard');
 });
 
 require __DIR__.'/auth.php';

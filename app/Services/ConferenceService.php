@@ -39,4 +39,12 @@ class ConferenceService
         $dateTime = Carbon::createFromFormat('Y-m-d H:i', $join);
         return $dateTime;
     }
+
+    // 
+    public static function getWeekConferences($startDate, $endDate)
+    {
+        return Conference::whereBetween('start_date', [$startDate, $endDate])
+                    ->orderBy('start_date', 'asc')
+                    ->get();
+    }
 }

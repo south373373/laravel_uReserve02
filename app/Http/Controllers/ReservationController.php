@@ -7,11 +7,40 @@ use App\Http\Requests\UpdateReservationRequest;
 use App\Models\Reservation;
 // 追記分
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
+use App\Services\ConferenceService;
 
 class ReservationController extends Controller
 {
+    public function dashboard()
+    {
+        $currentDate = CarbonImmutable::today();
+        $currentWeek = $this->generateWeek($currentDate);
+        $conferences = ConferenceService::getWeekConferences(
+            $currentDate->format('Y-m-d'),
+            $currentDate->addDays(7)->format('Y-m-d')
+        );
+
+        return view('dashboard', compact('currentDate', 'currentWeek', 'conferences'));
+    }
+
+    private function generateWeek($currentDate)
+    {
+        $week = [];
+        for ($i = 0; $i < 7; $i++) {
+            $day = $currentDate->addDays($i)->format('m月d日');
+            $checkDay = $currentDate->addDays($i)->format('Y-m-d');
+            $dayOfWeek = $currentDate->addDays($i)->dayName;
+            $week[] = [
+                'day' => $day,
+                'checkDay' => $checkDay,
+                'dayOfWeek' => $dayOfWeek,
+            ];
+        }
+        return $week;
+    }
+
     /**
      * Display a listing of the resource.
      */
