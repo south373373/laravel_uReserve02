@@ -15,6 +15,13 @@
                 <!-- 変数を定義していない状態のviewを表示する場合 -->
                 {{-- <x-calendar /> --}}
 
+                <!-- flashメッセージの出力設定 -->
+                @if(session('status'))
+                  <div class="mb-4 font-medium text-sm text-green-600">
+                      {{ session('status') }}
+                  </div>
+                @endif
+
                 <!-- 変数を定義している状態のviewを表示する場合 -->
                 <x-calendar :currentDate="$currentDate" :currentWeek="$currentWeek" :conferences="$conferences" />
                 <!-- JavaScriptの読み込み -->

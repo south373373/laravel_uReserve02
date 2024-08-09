@@ -72,11 +72,8 @@ Route::prefix('manager')
 Route::middleware(['auth', 'can:user-higher'])
 ->group(function(){
     // Route::match(['get', 'post'], '/', [CalendarController::class, 'index'])->name('index')->middleware('auth');
-    Route::resource('reservations', ReservationController::class);
     Route::get('/dashboard', [ReservationController::class, 'dashboard'])->name('dashboard')->middleware('auth');
     Route::get('/user/dashboard', [ReservationController::class, 'dashboard'])->name('user.dashboard');
-    Route::get('/conference/{id}', [ReservationController::class, 'detail'])->name('conferences.detail');
-    Route::post('/conference/{id}', [ReservationController::class, 'reserve'])->name('conferences.reserve');
 });
 
 require __DIR__.'/auth.php';

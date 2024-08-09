@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\DB;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
 use App\Services\ConferenceService;
+use App\Models\Conference;
+use Illuminate\Support\Facades\Auth;
+
+// $reservedPeopleが空か、最大定員 >= 予約人数 + 入力された人数 なら予約可能
+
 
 class ReservationController extends Controller
 {
@@ -40,6 +45,90 @@ class ReservationController extends Controller
         }
         return $week;
     }
+
+    // 
+    public function detail($id)
+    {
+        $conference = Conference::findOrFail($id);
+
+        // 予約数の合計queryの処理
+        $reservedPeople = Reservation::select('conference_id', Reservation::raw('sum(number_of_people) as number_of_people'))
+        // cancelの場合、合計人数から外す。
+        ->whereNull('canceled_date')
+        ->groupBy('conference_id')
+        // 更に表示されているイベント情報と指定
+        ->having('event_id', $conference->id)
+        ->first();
+
+        // 予約の有無で判定
+        if(!is_null($reservedPeople))
+        {
+            // 予約可能な人数は、定員人数(max_people)から予約人数(number_of_people)を引いた値。
+            $reservablePeople = $conference->max_people - $reservedPeople->number_of_people;
+        }
+        else{
+            $reservablePeople = $conference->max_people;
+        }
+        return view('conference-detail', compact('conference', 'reservablePeople'));
+    }
+
+    // 排他ロックを使用せずに、予約人数の超過を防止。
+    // 但し、これは完璧な解決策ではなく非常に高い同時アクセスがある場合には依然として競合の可能性有り。
+    public function reserve(Request $request)
+    {
+        $conference = Conference::findOrFail($request->id);
+
+        // 予約数の合計queryの処理
+        $reservedPeople = Reservation::select('conference_id', Reservation::raw('sum(number_of_people) as number_of_people'))
+            // 以下を追記。
+            ->where('conference_id', $conference->id)
+            // cancelの場合、合計人数から外す。
+            ->whereNull('canceled_date')
+            ->groupBy('conference_id')
+            // 更に表示されているイベント情報と指定
+            ->having('event_id', $conference->id)
+            ->first();        
+
+        if(is_null($reservedPeople) || 
+            $conference->max_people >= $reservedPeople->number_of_people + $request->reserved_people)
+        {
+            // ここでもう一度データベースを確認
+            $currentReservedPeople = Reservation::select('conference_id', DB::raw('sum(number_of_people) as number_of_people'))
+                ->where('conference_id', $conference->id)
+                ->whereNull('canceled_date')
+                ->groupBy('conference_id')
+                ->first();
+            
+            if (is_null($currentReservedPeople) || 
+            $conference->max_people >= $currentReservedPeople->number_of_people + $request->reserved_people)
+            {
+                Reservation::create([
+                    'user_id' => Auth::id(),
+                    'conference_id' => $conference->id,
+                    'number_of_people' => $request->reserved_people,
+                ]);
+    
+                // flashメッセージを設定
+                session()->flash('status', '登録しました');
+                return redirect()->route('dashboard');
+            }
+            else{
+                session()->flash('status', 'この人数では予約が出来ません。');
+                // 対象のイベントでの予約画面上でエラー時に「dashboard」画面へ遷移。
+                return redirect()->route('dashboard', $conference->id);
+                // 対象のイベントでの予約画面上でエラーであれば以下。
+                // return redirect()->route('conferences.detail', $conference->id);
+            }
+        }
+        else{
+            session()->flash('status', 'この人数では予約が出来ません。');
+            // 対象のイベントでの予約画面上でエラー時に「dashboard」画面へ遷移。
+            return redirect()->route('dashboard', $conference->id);
+            // 対象のイベントでの予約画面上でエラーであれば以下。
+            // return redirect()->route('conferences.detail', $conference->id);
+        }
+    }
+
 
     /**
      * Display a listing of the resource.
@@ -78,7 +167,8 @@ class ReservationController extends Controller
 
         // flashメッセージを設定
         session()->flash('status', '予約が作成されました');
-        return redirect()->route('manager.reservations.index');        
+        // return redirect()->route('manager.reservations.index');        
+        return redirect()->route('reservations.index');        
     }
 
     /**
@@ -136,7 +226,8 @@ class ReservationController extends Controller
 
         // flashメッセージを設定
         session()->flash('status', '予約が削除されました');
-        return redirect()->route('manager.reservations.index');                
+        // return redirect()->route('manager.reservations.index');                
+        return redirect()->route('reservations.index');                
 
     }
 

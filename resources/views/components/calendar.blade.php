@@ -22,14 +22,19 @@
                     @if($conferences->isNotEmpty())
                         @if(!is_null($conferences->firstWhere('start_date', $currentWeek[$i]['checkDay'] . " " . ConferenceConst::EVENT_TIME[$j] )))
                             @php
+                                // 最後をidにて指定。
+                                $conferenceId = $conferences->firstWhere('start_date', $currentWeek[$i]['checkDay'] . " " . ConferenceConst::EVENT_TIME[$j] )->id;
+                                
                                 $conferenceName = $conferences->firstWhere('start_date', $currentWeek[$i]['checkDay'] . " " . ConferenceConst::EVENT_TIME[$j] )->name;
                                 $conferenceInfo = $conferences->firstWhere('start_date', $currentWeek[$i]['checkDay'] . " " . ConferenceConst::EVENT_TIME[$j] );
                                 
                                 // 開始 - 終了の差分を計算
                                 $conferencePeriod = \Carbon\Carbon::parse($conferenceInfo->start_date)->diffInMinutes($conferenceInfo->end_date) / 30 - 1;
                             @endphp
-                            <!-- イベントがあった場合は背景色を変更 -->
-                            <div class="py-1 px-2 h-8 border border-gray-200 text-xs bg-blue-100">{{ $conferenceName }}</div>
+                            <a href="{{ route('conferences.detail', ['id' => $conferenceId ])}}">
+                                <!-- イベントがあった場合は背景色を変更 -->
+                                <div class="py-1 px-2 h-8 border border-gray-200 text-xs bg-blue-100">{{ $conferenceName }}</div>
+                            </a>
                             @if( $conferencePeriod > 0 )
                                 @for($k = 0; $k < $conferencePeriod; $k++)
                                     <div class="py-1 px-2 h-8 border border-gray-200 text-xs bg-blue-100"></div>
