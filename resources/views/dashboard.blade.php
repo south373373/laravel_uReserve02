@@ -23,7 +23,7 @@
                 @endif
 
                 <!-- 変数を定義している状態のviewを表示する場合 -->
-                <x-calendar :currentDate="$currentDate" :currentWeek="$currentWeek" :conferences="$conferences" />
+                <x-calendar :currentDate="$currentDate" :currentWeek="$currentWeek" :conferences="$conferences" :isFull="$isFull" />
                 <!-- JavaScriptの読み込み -->
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.9/flatpickr.min.js"></script>
                 <script src="{{ asset('js/flatpicker.js') }}"></script>

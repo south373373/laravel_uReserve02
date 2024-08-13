@@ -77,6 +77,8 @@ Route::middleware(['auth', 'can:user-higher'])
     Route::get('/user/dashboard', [ReservationController::class, 'dashboard'])->name('user.dashboard');
     Route::get('/conference/{id}', [ReservationController::class, 'detail'])->name('conferences.detail');
     Route::post('/conference/{id}', [ReservationController::class, 'reserve'])->name('conferences.reserve');
+    // {id}の様な「{}」波カッコは可能な限り、下に記載した方が良いとの事。{}は何が入力されても良いため。
+    // また同じアドレス指定の時に「get->post・・・」等の順番も配慮する事。php artisan route:listの表示順を参照。
 });
 
 require __DIR__.'/auth.php';

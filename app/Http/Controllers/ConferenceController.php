@@ -108,6 +108,9 @@ class ConferenceController extends Controller
         // flashメッセージを設定
         session()->flash('status', '登録しました');
         return redirect()->route('conferences.index');
+        // 以下で1行で完了できるとの事。
+        // return redirect()->route('conferences.index')->with('status','登録しました');
+        // ちなみにflashメッセージの文字
     }
 
 
@@ -213,6 +216,7 @@ class ConferenceController extends Controller
         // - Services > ConferenceService.phpの関数を記載
         $endDate = ConferenceService::joinDateAndTime($request['event_date'], $request['end_time']);
 
+
         // 既存情報を取得した上で上書きして保存
         $conference = Conference::findOrFail($conference->id);
         $conference->name = $request['event_name'];
@@ -223,6 +227,14 @@ class ConferenceController extends Controller
         $conference->max_people = $request['max_people'];
         $conference->is_visible = $request['is_visible'];
         $conference->save();
+
+        // 以下の記載が基本。
+        // $conference = Conference::find($conference->id);  // 事前にリレーションが設定している事が理想。上記の様なjoinはしないでの方が良い。
+        // $conference->xxx = $request->xxx;
+        // $conference->xxx = $request->input('xxx'); //これでもOK。
+        // $conference->save();
+
+
 
         // flashメッセージを設定
         session()->flash('status', '更新しました');

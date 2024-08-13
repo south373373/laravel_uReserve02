@@ -117,6 +117,7 @@
             <!-- ユーザー会員のみアクセス可能 -->
             @auth
                 @if(Auth::user()->role > 0 && Auth::user()->role <= 9)
+                <!-- タブがアクセスした時に「水色の表示になっている時のアクションは「routeIs」が自分のrouteと合っていれば表示される」 -->
                 <x-nav-link :href="route('user.dashboard')" :active="request()->routeIs('user.dashboard')">
                 イベントカレンダー_[navigation.blade.php]
                 </x-nav-link>

@@ -32,10 +32,11 @@
                                 $conferencePeriod = \Carbon\Carbon::parse($conferenceInfo->start_date)->diffInMinutes($conferenceInfo->end_date) / 30 - 1;
                             @endphp
                             <a href="{{ route('conferences.detail', ['id' => $conferenceId ])}}">
-                                <!-- イベントがあった場合は背景色を変更 -->
-                                <div class="py-1 px-2 h-8 border border-gray-200 text-xs bg-blue-100">{{ $conferenceName }}</div>
+                                <!-- イベントがあった場合は背景色を変更 <イベント名> -->
+                                <div class="py-1 px-2 h-8 border border-gray-200 text-xs bg-blue-100 }}">{{ $conferenceName }}</div>
                             </a>
                             @if( $conferencePeriod > 0 )
+                                <!-- イベントがあった場合は背景色を変更 <30分単位> -->
                                 @for($k = 0; $k < $conferencePeriod; $k++)
                                     <div class="py-1 px-2 h-8 border border-gray-200 text-xs bg-blue-100"></div>
                                 @endfor

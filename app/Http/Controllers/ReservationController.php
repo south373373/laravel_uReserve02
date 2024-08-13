@@ -27,7 +27,22 @@ class ReservationController extends Controller
             $currentDate->addDays(7)->format('Y-m-d')
         );
 
-        return view('dashboard', compact('currentDate', 'currentWeek', 'conferences'));
+        $conferenceData = [];
+        foreach ($conferences as $conference) {
+            $reservedPeople = Reservation::where('conference_id', $conference->id)
+                ->whereNull('canceled_date')
+                ->sum('number_of_people');
+    
+            $isFull = $conference->max_people <= $reservedPeople;
+    
+            $conferenceData[] = [
+                'day' => CarbonImmutable::parse($conference->start_date)->format('Y-m-d'),
+                'name' => $conference->name,
+                'isFull' => $isFull,
+            ];
+        }
+
+        return view('dashboard', compact('currentDate', 'currentWeek', 'conferences','isFull'));
     }
 
     private function generateWeek($currentDate)
@@ -51,25 +66,41 @@ class ReservationController extends Controller
     {
         $conference = Conference::findOrFail($id);
 
-        // 予約数の合計queryの処理
-        $reservedPeople = Reservation::select('conference_id', Reservation::raw('sum(number_of_people) as number_of_people'))
-        // cancelの場合、合計人数から外す。
-        ->whereNull('canceled_date')
-        ->groupBy('conference_id')
-        // 更に表示されているイベント情報と指定
-        ->having('event_id', $conference->id)
-        ->first();
+        $currentDate = CarbonImmutable::today();
+        $currentWeek = $this->generateWeek($currentDate);
 
-        // 予約の有無で判定
-        if(!is_null($reservedPeople))
-        {
-            // 予約可能な人数は、定員人数(max_people)から予約人数(number_of_people)を引いた値。
-            $reservablePeople = $conference->max_people - $reservedPeople->number_of_people;
-        }
-        else{
-            $reservablePeople = $conference->max_people;
-        }
-        return view('conference-detail', compact('conference', 'reservablePeople'));
+        // // 予約数の合計queryの処理
+        // $reservedPeople = Reservation::select('conference_id', Reservation::raw('sum(number_of_people) as number_of_people'))
+        // // cancelの場合、合計人数から外す。
+        // ->whereNull('canceled_date')
+        // ->groupBy('conference_id')
+        // // 更に表示されているイベント情報と指定
+        // ->having('event_id', $conference->id)
+        // ->first();
+
+        // 現在の予約人数の合計を取得
+        $reservedPeople = Reservation::where('conference_id', $conference->id)
+        ->whereNull('canceled_date')
+        ->sum('number_of_people');
+
+        // // 予約の有無で判定
+        // if(!is_null($reservedPeople))
+        // {
+        //     // 予約可能な人数は、定員人数(max_people)から予約人数(number_of_people)を引いた値。
+        //     $reservablePeople = $conference->max_people - $reservedPeople->number_of_people;
+        // }
+        // else{
+        //     $reservablePeople = $conference->max_people;
+        // }
+
+        // 予約可能人数を計算
+        $reservablePeople = $conference->max_people - $reservedPeople;
+
+        // 満員かどうかのフラグ
+        $isFull = $reservablePeople <= 0;
+
+        // return view('conference-detail', compact('conference', 'reservablePeople'));
+        return view('conference-detail', compact('conference', 'currentDate', 'currentWeek', 'reservablePeople', 'isFull'));
     }
 
     // 排他ロックを使用せずに、予約人数の超過を防止。

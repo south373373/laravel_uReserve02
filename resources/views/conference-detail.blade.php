@@ -76,19 +76,27 @@
                                 {{ $conference->max_people }}
                             </div>
                             <div class="mt-4">
-                                <x-input-label for="reserved_people" value="【予約人数】" />
-                                <select name="reserved_people">
-                                    <!-- 予約可能な最大人数を表示 -->
-                                    @for($i = 1; $i <= $reservablePeople; $i++)
-                                        <option value="{{$i}}">{{$i}}</option>
-                                    @endfor
-                                </select>
+                                <!-- 満員時の表示変更 -->
+                                {{-- @if($reservablePeople <= 0) --}}
+                                @if($isFull)
+                                    <span class="text-red-500 text-xs">このイベントは満員です。</span>
+                                @else
+                                    <x-input-label for="reserved_people" value="【予約人数】" />
+                                    <select name="reserved_people">
+                                        <!-- 予約可能な最大人数を表示 -->
+                                        @for($i = 1; $i <= $reservablePeople; $i++)
+                                            <option value="{{$i}}">{{$i}}</option>
+                                        @endfor
+                                    </select>
+                                @endif
                             </div>
 
-                            <input type="hidden" name="id" value="{{ $conference->id }}">
-                            <x-primary-button class="ms-3">
-                                予約する
-                            </x-primary-button>
+                            @if(!$isFull)
+                                <input type="hidden" name="id" value="{{ $conference->id }}">
+                                <x-primary-button class="ms-3">
+                                    予約する
+                                </x-primary-button>
+                            @endif
                         </div>
                     </form>
                 </div>
