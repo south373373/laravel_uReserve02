@@ -26,9 +26,6 @@
                     <!-- Session Status -->
                     <x-auth-session-status class="mb-4" :status="session('status')" />
 
-                    <!-- 編集ページへ遷移 -->
-                    {{-- <form method="GET" action="{{ route('conferences.edit', ['conference' => $conference->id]) }}"> --}}
-
 
                         <!-- イベント名 -->
                         <div>
@@ -70,6 +67,9 @@
                             </div>
                         </div>
                         
+                    <!-- cancelボタンのform設定 -->
+                    <form id="cancel_{{ $conference->id }}" method="post" action="{{ route('mypage.cancel', ['id' => $conference->id]) }}">
+                        @csrf
                         <!-- 定員人数 -->
                         <div class="md:flex justify-between items-end">
                             <div class="mt-4">
@@ -79,10 +79,12 @@
 
                             <!-- 過去のイベント一覧
                                  キャンセルボタンの表示条件として「<」今日以前であると設定 -->
-                            @if($conference->eventDate < \Carbon\Carbon::today()->format('Y年m月d日') )
-                                <x-primary-button class="ms-3">
+                            @if($conference->eventDate >= \Carbon\Carbon::today()->format('Y年m月d日') )
+                                {{-- <x-primary-button class="ms-3"> --}}
+                                <a href="#" data-id="{{ $conference->id }}" onclick="cancelPost(this)" class="ml-4 bg-black text-white py-2 px-4">
                                     キャンセルする
-                                </x-primary-button>
+                                </a>
+                                {{-- </x-primary-button> --}}
                             @endif
                         </div>
                     </form>
@@ -90,4 +92,14 @@
             </div>
         </div>
     </div>
+    <!-- cancelボタンの処理 -->
+    <script>
+        function cancelPost(e){
+            'use strict';
+            if(confirm('本当にキャンセルしてもよろしいでしょうか？'))
+            {
+                document.getElementById('cancel_' + e.dataset.id).submit();
+            }
+        }
+    </script>
 </x-app-layout>

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Services\MyPageService;
+use Carbon\Carbon;
 
 class MyPageController extends Controller
 {
@@ -39,5 +40,23 @@ class MyPageController extends Controller
             ->first();
 
         return view('mypage/show', compact('conference', 'reservation'));
+    }
+
+    // cancelボタンの処理の定義
+    public function cancel($id)
+    {
+        // データ取得確認
+        // dd($id);
+
+        $reservation = Reservation::where('user_id', '=', Auth::id())
+            ->where('conference_id', '=', $id)
+            ->first();
+        
+        $reservation->canceled_date = Carbon::now()->format('Y-m^d H:i:s');
+        $reservation->save();
+
+        // flashメッセージを設定
+        return redirect()->route('dashboard')
+            ->with('status', 'キャンセル出来ました');
     }
 }
