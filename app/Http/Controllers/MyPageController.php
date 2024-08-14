@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Conference;
+use App\Models\Reservation;
 use Illuminate\Http\Request;
 // 追加機能
 use Illuminate\Support\Facades\Auth;
@@ -24,6 +26,18 @@ class MyPageController extends Controller
         // データ取得確認
         // dd($user, $conferences, $fromTodayConferences, $pastConferences);
 
-        return view('mypage/index', compact('fromTodayConferences', 'pastConfereces'));
+        return view('mypage/index', compact('fromTodayConferences', 'pastConferences'));
+    }
+
+    public function show($id)
+    {
+        // 会議情報の取得
+        $conference = Conference::findOrFail($id);
+        // 予約情報の取得
+        $reservation = Reservation::where('user_id', '=', Auth::id())
+            ->where('conference_id', '=', $id)
+            ->first();
+
+        return view('mypage/show', compact('conference', 'reservation'));
     }
 }

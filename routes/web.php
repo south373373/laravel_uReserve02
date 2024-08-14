@@ -76,6 +76,7 @@ Route::middleware(['auth', 'can:user-higher'])
     Route::resource('reservations', ReservationController::class);
     Route::get('/dashboard', [ReservationController::class, 'dashboard'])->name('dashboard')->middleware('auth');
     Route::get('/mypage', [MyPageController::class, 'index'])->name('mypage.index');
+    Route::get('/mypage/{id}', [MyPageController::class, 'show'])->name('mypage.show');
     Route::get('/user/dashboard', [ReservationController::class, 'dashboard'])->name('user.dashboard');
     Route::get('/conference/{id}', [ReservationController::class, 'detail'])->name('conferences.detail');
     Route::post('/conference/{id}', [ReservationController::class, 'reserve'])->name('conferences.reserve');

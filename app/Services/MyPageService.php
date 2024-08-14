@@ -24,6 +24,7 @@ class MyPageService
                 $conference->start_date >= Carbon::now()->format('Y-m-d 00:00:00'))
                 {
                     $conferenceInfo = [
+                        'id' => $conference->id,
                         'name' => $conference->name,
                         'start_date' => $conference->start_date,
                         'end_date' => $conference->end_date,
@@ -46,6 +47,7 @@ class MyPageService
                 $conference->start_date < Carbon::now()->format('Y-m-d 00:00:00'))
                 {
                     $conferenceInfo = [
+                        'id' => $conference->id,
                         'name' => $conference->name,
                         'start_date' => $conference->start_date,
                         'end_date' => $conference->end_date,
