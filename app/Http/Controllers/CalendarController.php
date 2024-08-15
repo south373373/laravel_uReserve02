@@ -52,8 +52,36 @@ class CalendarController extends Controller
                                       ->where('start_date', '<=', $currentDate->addDays(30))
                                       ->get();
 
+            // 満員か否かの判定条件の追記
+            $conferenceData = [];
+            foreach ($conferences as $conference) {
+                $reservedPeople = $conference->reservations()->whereNull('canceled_date')->sum('number_of_people');
+                $isFull = $conference->max_people <= $reservedPeople;
+    
+                $conferenceData[] = [
+                    'conference' => $conference,
+                    'isFull' => $isFull,
+                ];
+            }
+
             return view('calendar', compact('currentDate', 'currentWeek', 'conferences'));
         }
+    }
+
+    private function generateWeek($currentDate)
+    {
+        $currentWeek = [];
+        for ($i = 0; $i < 7; $i++) {
+            $day = $currentDate->addDays($i)->format('m月d日');
+            $checkDay = $currentDate->addDays($i)->format('Y-m-d');
+            $dayOfWeek = $currentDate->addDays($i)->dayName;
+            array_push($currentWeek, [
+                'day' => $day,
+                'checkDay' => $checkDay,
+                'dayOfWeek' => $dayOfWeek,
+            ]);
+        }
+        return $currentWeek;
     }
 
     // public function getDate($date)

@@ -93,6 +93,13 @@ class ReservationController extends Controller
         //     $reservablePeople = $conference->max_people;
         // }
 
+        // ログイン対象ユーザーがイベントの予約済みか否かの絞り込み
+        $isReserved = Reservation::where('user_id', '=', Auth::id())
+            ->where('conference_id', '=', $id)
+            ->where('canceled_date', '=', null)
+            ->latest()
+            ->first();
+
         // 予約可能人数を計算
         $reservablePeople = $conference->max_people - $reservedPeople;
 
@@ -100,7 +107,7 @@ class ReservationController extends Controller
         $isFull = $reservablePeople <= 0;
 
         // return view('conference-detail', compact('conference', 'reservablePeople'));
-        return view('conference-detail', compact('conference', 'currentDate', 'currentWeek', 'reservablePeople', 'isFull'));
+        return view('conference-detail', compact('conference', 'currentDate', 'currentWeek', 'reservablePeople', 'isFull', 'isReserved'));
     }
 
     // 排他ロックを使用せずに、予約人数の超過を防止。

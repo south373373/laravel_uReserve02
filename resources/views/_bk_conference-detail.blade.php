@@ -72,7 +72,12 @@
                         <!-- 定員人数 -->
                         <div class="md:flex justify-between items-end">
                             <div class="mt-4">
+                                <x-input-label for="max_people" value="【定員人数】" />
+                                {{ $conference->max_people }}
+                            </div>
+                            <div class="mt-4">
                                 <!-- 満員時の表示変更 -->
+                                {{-- @if($reservablePeople <= 0) --}}
                                 @if($isFull)
                                     <span class="text-red-500 text-xs">このイベントは満員です。</span>
                                 @else
@@ -90,20 +95,10 @@
                             @if($isReserved === null)
                                 <!-- 会議の空席・満席状況の判定 -->
                                 @if(!$isFull)
-                                    <!-- ログイン済みかどうかの判定 -->
-                                    @auth
-                                        <!-- ログイン済みなら「予約する」ボタンを表示 -->
-                                        <input type="hidden" name="id" value="{{ $conference->id }}">
-                                        <x-primary-button class="ms-3">
-                                            予約する
-                                        </x-primary-button>
-                                    @else
-                                        <!-- 未ログインならログインページへのリンクを表示 -->
-                                        <a href="{{ route('login') }}" class="text-white bg-black px-2 py-1 rounded">
-                                            <!-- 予約するにはログインが必要 -->
-                                            予約する
-                                        </a>
-                                    @endauth
+                                    <input type="hidden" name="id" value="{{ $conference->id }}">
+                                    <x-primary-button class="ms-3">
+                                        予約する
+                                    </x-primary-button>
                                 @endif
                             @else
                                 <span class="text-xs">このイベントは既に予約済みです。</span>

@@ -37,6 +37,7 @@ class MyPageController extends Controller
         // 予約情報の取得
         $reservation = Reservation::where('user_id', '=', Auth::id())
             ->where('conference_id', '=', $id)
+            ->latest() //最新の情報
             ->first();
 
         return view('mypage/show', compact('conference', 'reservation'));
@@ -50,6 +51,7 @@ class MyPageController extends Controller
 
         $reservation = Reservation::where('user_id', '=', Auth::id())
             ->where('conference_id', '=', $id)
+            ->latest() //最新の情報
             ->first();
         
         $reservation->canceled_date = Carbon::now()->format('Y-m^d H:i:s');

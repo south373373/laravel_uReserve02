@@ -79,10 +79,13 @@ Route::middleware(['auth', 'can:user-higher'])
     Route::get('/mypage/{id}', [MyPageController::class, 'show'])->name('mypage.show');
     Route::post('/mypage/{id}', [MyPageController::class, 'cancel'])->name('mypage.cancel');
     Route::get('/user/dashboard', [ReservationController::class, 'dashboard'])->name('user.dashboard');
-    Route::get('/conference/{id}', [ReservationController::class, 'detail'])->name('conferences.detail');
+    // Route::get('/conference/{id}', [ReservationController::class, 'detail'])->name('conferences.detail');
     Route::post('/conference/{id}', [ReservationController::class, 'reserve'])->name('conferences.reserve');
     // {id}の様な「{}」波カッコは可能な限り、下に記載した方が良いとの事。{}は何が入力されても良いため。
     // また同じアドレス指定の時に「get->post・・・」等の順番も配慮する事。php artisan route:listの表示順を参照。
 });
+
+// 未ログイン状態からのカレンダー上の会議の詳細表示用
+Route::get('/conference/{id}', [ReservationController::class, 'detail'])->name('conferences.detail');
 
 require __DIR__.'/auth.php';
