@@ -16,10 +16,10 @@
                     @auth
                         @if(Auth::user()->role > 0 && Auth::user()->role <= 9)
                         <x-nav-link :href="route('user.dashboard')" :active="request()->routeIs('user.dashboard')">
-                            イベントカレンダー_[navigation.blade.php]
+                            イベントカレンダー
                         </x-nav-link>
                         <x-nav-link :href="route('mypage.index')" :active="request()->routeIs('mypage.index')">
-                            マイページ_[navigation.blade.php]
+                            マイページ
                         </x-nav-link>
                         @endif
                     @endauth

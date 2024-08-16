@@ -27,8 +27,8 @@
                         <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">開始日時</th>
                         <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">終了日時</th>
                         <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">予約人数</th>
-                        <!-- 削除用 ※念の為流用元のmanager > conferences > indexから残す-->
-                        <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100"> - </th>
+                        <!-- 削除用 ※<参照> manager > conferences > index -->
+                        <!-- <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100"> - </th> -->
                       </tr>
                     </thead>
                     <tbody>
@@ -46,16 +46,8 @@
                             {{ $conference['number_of_people'] }}
                         </td>
 
-                        <!-- 削除用 -->
-                        <form id="delete_{{$conference['id'] }}" method="post" action="{{ route('conferences.destroy', ['conference' => $conference['id'] ] )}}">
-                            @csrf
-                            @method('delete')
-                            <td class="text-red-500 px-4 py-3">
-                                <x-danger-button class="ms-3">
-                                    <a href="#" data-id="{{ $conference['id'] }}" onclick="deletePost(this)">削除</a>
-                                </x-danger-button>
-                            </td>
-                        </form>
+                        <!-- 削除用 ※<参照> manager > conferences > index -->
+                        <!-- もし削除実施の場合は処理コードをここに記載 -->
                       </tr>
                       @endforeach
                     </tbody>

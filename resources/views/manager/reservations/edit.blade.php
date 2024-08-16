@@ -29,14 +29,18 @@
                     <!-- ユーザー名 -->
                     <div>
                         <x-input-label for="event_name" value="【ユーザー名】" />
-                        {{ $reservation->user->name }}
+                        {{-- {{ $reservation->user->name }} --}}
+                        <!-- userで存在しないデータが混在しているため、以下の通りに回避対応 -->
+                        {{ optional($reservation->user)->name ?? 'ユーザー不明' }}
                         
                     </div>
 
                     <!-- イベント名 -->
                     <div class="mt-4">
                         <x-input-label for="information" value="【イベント名】" />
-                        {{ $reservation->conference->name }}
+                        {{-- {{ $reservation->conference->name }} --}}
+                        <!-- conferenceで存在しないデータが混在しているため、以下の通りに回避対応 -->
+                        {{ optional($reservation->conference)->name ?? 'イベント不明' }}
                         
                     </div>
 

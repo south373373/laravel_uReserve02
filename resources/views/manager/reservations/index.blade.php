@@ -41,8 +41,14 @@
                       <!-- Reservationテーブルの情報を表示出力 -->
                       @foreach($reservations as $reservation)
                       <tr>
-                        <td class="px-4 py-3">{{ $reservation->user->name }}</td>
-                        <td class="px-4 py-3">{{ $reservation->conference->name }}</td>
+                        {{-- <td class="px-4 py-3">{{ $reservation->user->name }}</td> --}}
+                        <!-- userで存在しないデータが混在しているため、以下の通りに回避対応 -->
+                        <td class="px-4 py-3">{{ optional($reservation->user)->name ?? 'ユーザー不明' }}</td>
+                        
+                        {{-- <td class="px-4 py-3">{{ $reservation->conference->name }}</td> --}}
+                        <!-- conferenceで存在しないデータが混在しているため、以下の通りに回避対応 -->
+                        <td class="px-4 py-3">{{ optional($reservation->conference)->name ?? 'イベント不明' }}</td>
+                        
                         <td class="px-4 py-3">{{ $reservation->number_of_people }}</td>
                         <td class="px-4 py-3">
                             {{ $reservation->created_at ? $reservation->created_at->format('Y-m-d H:i') : 'N/A' }}

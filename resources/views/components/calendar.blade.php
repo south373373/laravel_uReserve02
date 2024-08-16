@@ -9,9 +9,13 @@
         日付を選択してください。本日から最大30日先まで選択可能です。
     </div>
     <!-- 元は「x-text-input」 。また日付選択-->
-    <input id="calendar" class="block mt-1 mb-2 mx-auto" type="text" name="calendar" value="{{ $currentDate }}" />
+    
+    
+    <!-- クエリ文字列を使って日付を更新 -->
+    <input id="calendar" class="block mt-1 mb-2 mx-auto" type="text" name="calendar" value="{{ $currentDate->format('Y-m-d') }}" />
+
     <!-- カレンダーの体裁 -->
-    <div class="flex mx-auto">
+    <div class="flex mx-auto calendar-container">
         <x-calendar-time />
         @for($i = 0; $i < 7; $i++)
             <div class="w-32">

@@ -21,12 +21,14 @@ use App\Http\Controllers\MyPageController;
 
 // - データティッカーのテキストボックスにより日付選択から1週間分の日付を表示
 Route::match(['get', 'post'], '/', [CalendarController::class, 'index'])->name('calendar.index');
+// Route::get('/', [CalendarController::class, 'index'])->name('calendar.index');
 
 // 今回は不要なため、コメント。
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');
 
+// 通常の認証用
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -65,9 +67,8 @@ Route::prefix('manager')
     // Reservation用
     // Route::get('reservations/past', [ReservationController::class, 'past'])->name('reservations.past'); 
     Route::resource('reservations', ReservationController::class); 
-
-
 });
+
 
 // user側
 Route::middleware(['auth', 'can:user-higher'])

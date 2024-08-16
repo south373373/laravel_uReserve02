@@ -237,9 +237,11 @@ class ConferenceController extends Controller
 
 
         // flashメッセージを設定
-        session()->flash('status', '更新しました');
+        // session()->flash('status', '更新しました');
 
-        return redirect()->route('conferences.index');
+        return redirect()
+            ->route('conferences.index')
+            ->with('status', '更新しました');
     }
 
 
@@ -285,9 +287,11 @@ class ConferenceController extends Controller
         ->delete();
 
         // flashメッセージを設定
-        session()->flash('status', '削除しました');
+        // session()->flash('status', '削除しました');
 
-        return redirect()->route('conferences.index');
+        return redirect()
+            ->route('conferences.index')
+            ->with('status', '削除しました');
     }
 
     // 論理削除データの一覧
@@ -323,8 +327,11 @@ class ConferenceController extends Controller
         $conference = Conference::withTrashed()->findOrFail($id);
         $conference->restore();
         
-        session()->flash('status', 'イベント管理へ戻しましたので、ご確認ください');
-        return redirect()->route('conferences.trashed');
+        // session()->flash('status', 'イベント管理へ戻しましたので、ご確認ください');
+
+        return redirect()
+            ->route('conferences.trashed')
+            ->with('status', 'イベント管理へ戻しましたので、ご確認ください');
     }
 
     // 物理削除の実施処理
@@ -333,7 +340,10 @@ class ConferenceController extends Controller
         $conference = Conference::withTrashed()->findOrFail($id);
         $conference->forceDelete();
 
-        session()->flash('status', '完全に削除しました');
-        return redirect()->route('conferences.trashed');
+        // session()->flash('status', '完全に削除しました');
+        
+        return redirect()
+            ->route('conferences.trashed')
+            ->with('status', '完全に削除しました');
     }
 }
