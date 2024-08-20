@@ -16,7 +16,8 @@ class CalendarController extends Controller
         // クエリパラメータから日付を取得。無い場合は本日の日付を取得。
         $currentDate = $request->query('date', CarbonImmutable::today()->format('Y-m-d'));
         $currentDate = CarbonImmutable::parse($currentDate);  // 日付をパース
-    
+
+
         // 1週間分の情報を作成
         $currentWeek = [];
         for ($i = 0; $i < 7; $i++) {
