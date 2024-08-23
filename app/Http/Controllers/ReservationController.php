@@ -132,7 +132,8 @@ class ReservationController extends Controller
             ->whereNull('canceled_date')
             ->groupBy('conference_id')
             // 更に表示されているイベント情報と指定
-            ->having('event_id', $conference->id)
+            // ->having('event_id', $conference->id)
+            ->having('conference_id', $conference->id)
             ->first();        
 
         if(is_null($reservedPeople) || 
@@ -174,6 +175,48 @@ class ReservationController extends Controller
             // return redirect()->route('conferences.detail', $conference->id);
         }
     }
+
+    // << 代替の修正案 >>
+    // 
+    // public function reserve(Request $request)
+    // {
+    //     $conference = Conference::findOrFail($request->id);
+    
+    //     // 予約人数の合計を計算
+    //     $reservedPeople = Reservation::where('conference_id', $conference->id)
+    //         ->whereNull('canceled_date')
+    //         ->sum('number_of_people'); // `sum`メソッドを使用
+    
+    //     // 予約可能かどうかの判定
+    //     if ($conference->max_people >= $reservedPeople + $request->reserved_people) {
+    //         // ここでもう一度データベースを確認
+    //         $currentReservedPeople = Reservation::where('conference_id', $conference->id)
+    //             ->whereNull('canceled_date')
+    //             ->sum('number_of_people');
+    
+    //         if ($conference->max_people >= $currentReservedPeople + $request->reserved_people) {
+    //             Reservation::create([
+    //                 'user_id' => Auth::id(),
+    //                 'conference_id' => $conference->id,
+    //                 'number_of_people' => $request->reserved_people,
+    //             ]);
+    
+    //             // flashメッセージを設定
+    //             return redirect()
+    //                 ->route('dashboard')
+    //                 ->with('status', '登録しました');
+    //         } else {
+    //             return redirect()
+    //                 ->route('dashboard', $conference->id)
+    //                 ->with('status', 'この人数では予約が出来ません。');
+    //         }
+    //     } else {
+    //         return redirect()
+    //             ->route('dashboard', $conference->id)
+    //             ->with('status', 'この人数では予約が出来ません。');
+    //     }
+    // }
+
 
 
     /**
