@@ -277,31 +277,37 @@ class ReservationController extends Controller
 
     }
 
-    // 論理削除データの一覧
-    public function trashed()
-    {
-        return view('manager.reservations.trashed');
-    }
+    // < 今回の予約一覧については「物理削除」のみ実装 >
+    // 
+    // // 論理削除データの一覧
+    // public function trashed()
+    // {
+    //     return view('manager.reservations.trashed');
+    // }
 
-    // 論理削除データからの復旧処理
-    public function restore($id)
-    {
-        $reservation = Reservation::withTrashed()->findOrFail($id);
-        $reservation->restore();
+    // // 論理削除データからの復旧処理
+    // public function restore($id)
+    // {
+    //     $reservation = Reservation::withTrashed()->findOrFail($id);
+    //     $reservation->restore();
         
-        // flashメッセージを設定
-        session()->flash('status', '予約管理へ戻しましたので、ご確認ください');
-        return redirect()->route('manager.reservations.trashed');
-    }
+    //     // flashメッセージを設定
+    //     session()->flash('status', '予約管理へ戻しましたので、ご確認ください');
+    //     return redirect()->route('manager.reservations.trashed');
+    // }
 
     // 物理削除の実施処理
-    public function forceDestroy($id)
+    public function forceDestroy(Reservation $reservation)
     {
-        $reservation = Reservation::withTrashed()->findOrFail($id);
+        // $reservation = Reservation::withTrashed()->findOrFail($id);
         $reservation->forceDelete();
 
         // flashメッセージを設定
-        session()->flash('status', '完全に削除しました');
-        return redirect()->route('manager.reservations.trashed');
+        // session()->flash('status', '予約を完全に削除しました');
+        // return redirect()->route('reservations.index');
+
+        return redirect()
+            ->route('reservations.index')
+            ->with('status', '予約を完全に削除しました');
     }
 }

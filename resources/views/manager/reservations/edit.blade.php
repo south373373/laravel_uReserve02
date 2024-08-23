@@ -58,20 +58,21 @@
                             <input id="number_of_people" class="form-control" type="number" name="number_of_people" value="{{ old('number_of_people', $reservation->number_of_people) }}" required>
                         </div>
 
+                        <div class="md:flex justify pt-2">
+                            <div class="text-red-500 px-4 py-3">
+                                <x-primary-button class="ms-3">
+                                    更新する
+                                </x-primary-button>
+                            </div>
 
-                        <div class="text-red-500 px-4 py-3">
-                            <x-primary-button class="ms-3">
-                                更新する
-                            </x-primary-button>
+                            <!-- 「キャンセル」ボタン ->「戻る」ボタンを流用 -->
+                            <div class="text-red-500 px-4 py-3">
+                                <x-primary-button class="ms-3">
+                                    <a href="{{ route('reservations.index') }}" class="btn btn-secondary">キャンセルする</a>
+                                </x-primary-button>
+                            </div>
                         </div>
                     </form>
-
-                    <div class="text-red-500 px-4 py-3">
-                        <x-primary-button class="ms-3">
-                            <a href="{{ route('reservations.index') }}" class="btn btn-secondary">戻る</a>
-                        </x-primary-button>
-                    </div>
-
                 </div>
             </div>
         </div>

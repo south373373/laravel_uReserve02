@@ -33,7 +33,7 @@
                         予約一覧
                     </x-nav-link>
                     <x-nav-link :href="route('conferences.index')" :active="request()->routeIs('conferences.index')">
-                        イベント管理
+                        イベント一覧
                     </x-nav-link>
                     <!-- イベント管理-論理削除実施の対象データ一覧 -->
                     <x-nav-link :href="route('conferences.trashed')" :active="request()->routeIs('conferences.trashed')">

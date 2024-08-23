@@ -59,6 +59,6 @@ class MyPageController extends Controller
 
         // flashメッセージを設定
         return redirect()->route('dashboard')
-            ->with('status', 'キャンセル出来ました');
+            ->with('status', '予約を取り消しました');
     }
 }

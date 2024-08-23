@@ -6,7 +6,7 @@
 
 <div>
     <div class="text-center text-sm">
-        日付を選択してください。本日から最大30日先まで選択可能です。
+        日付を選択してください。下のテキスボックスをクリックし、日付を選択します。
     </div>
     <!-- 元は「x-text-input」 。また日付選択-->
     
@@ -61,9 +61,9 @@
         @endfor
     </div>
     <!-- 作成中は残しておく。最終的に完成した後に削除 -->
-    @foreach($conferences as $conference)
-        {{ $conference->start_date }}
-    @endforeach
+    <!-- @foreach($conferences as $conference) -->
+    {{--  {{ $conference->start_date }} --}}
+    <!-- @endforeach -->
 </div>
 
 

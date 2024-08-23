@@ -26,45 +26,66 @@
                     <!-- Session Status -->
                     <x-auth-session-status class="mb-4" :status="session('status')" />
 
-                    <!-- 後日体裁を編集 -->
-
-                        <!-- ユーザー名 -->
+<!-- 後日体裁を編集 -->
+                   <!-- 編集ページへ遷移 -->
+                   
+                   <form method="GET" action="{{ route('reservations.edit', ['reservation' => $reservation->id]) }}">
+                
+                        <!-- ユーザー名（予約者名） -->
                         <div>
-                            <x-input-label for="event_name" value="【ユーザー名】" />
+                            <x-input-label for="event_name" value="【予約者名】" />
                             {{-- {{ $reservation->user->name }} --}}
                             <!-- userで存在しないデータが混在しているため、以下の通りに回避対応 -->
                             {{ optional($reservation->user)->name ?? 'ユーザー不明' }}
                             
                         </div>
 
-                        <!-- イベント名 -->
-                        <div class="mt-4">
-                            <x-input-label for="information" value="【イベント名】" />
-                            {{-- {{ $reservation->conference->name }} --}}
-                            <!-- conferenceで存在しないデータが混在しているため、以下の通りに回避対応 -->
-                            {{ optional($reservation->conference)->name ?? 'イベント不明' }}
-                            
-                        </div>
+                        <div class="md:flex justify-between">
+                            <!-- イベント名 -->
+                            <div class="mt-4">
+                                <x-input-label for="information" value="【イベント名】" />
+                                {{-- {{ $reservation->conference->name }} --}}
+                                <!-- conferenceで存在しないデータが混在しているため、以下の通りに回避対応 -->
+                                {{ optional($reservation->conference)->name ?? 'イベント不明' }}
+
+                            </div>
                         
-                        <!-- 予約人数 -->
-                        <div class="mt-4">
-                            <x-input-label for="information" value="【予約人数】" />
-                            {{ $reservation->number_of_people }}
-                            
-                        </div>
+                            <!-- 予約人数 -->
+                            <div class="mt-4">
+                                <x-input-label for="information" value="【現在の予約人数】" />
+                                {{ $reservation->number_of_people . '人' }}
+                            </div>
                         
-                        <!-- 予約日時 -->
-                        <div class="mt-4">
-                            <x-input-label for="information" value="【予約日時】" />
-                            {{ $reservation->created_at ? $reservation->created_at->format('Y-m-d H:i') : 'N/A' }}
-                            
+                            <!-- 残りの予約人数 -->
+                            <div class="mt-4">
+                                <x-input-label for="information" value="【残りの予約人数】" />
+                                {{ $reservation->conference->max_people - $reservation->conference->reservations->sum('number_of_people') . '人' }}
+                            </div>
+                        
+                            <!-- 予約日時 -->
+                            <div class="mt-4">
+                                <x-input-label for="information" value="【予約日時】" />
+                                {{ $reservation->created_at ? $reservation->created_at->format('Y-m-d H:i') : 'N/A' }}
+                            </div>
                         </div>
 
-                        <div class="text-red-500 px-4 py-3">
-                            <x-primary-button class="ms-3">
-                                <a href="{{ route('reservations.index') }}" class="btn btn-secondary">戻る</a>
-                            </x-primary-button>
+                        <div class="md:flex justify">
+                            <!-- 過去のイベント一覧であれば、ボタンは非表示 -->
+                            <div class="text-red-500 px-4 py-3">
+                                <x-primary-button class="ms-3">
+                                    編集する
+                                </x-primary-button>
+                            </div>
+                            
+                            <!-- 「戻る」ボタンの配置 -->
+                            <div class="text-red-500 px-4 py-3">
+                                <x-primary-button class="ms-3">
+                                    <a href="{{ route('reservations.index') }}" class="btn btn-secondary">戻る</a>
+                                </x-primary-button>
+                            </div>
                         </div>
+
+                    </form>
                 </div>
             </div>
         </div>

@@ -78,25 +78,34 @@
                             </div>
 
                             <!-- 過去のイベント一覧
-                                 キャンセルボタンの表示条件として「<」今日以前であると設定 -->
+                                 「キャンセル」ボタン(予約取消)の表示条件として「<」今日以前であると設定 -->
                             @if($conference->eventDate >= \Carbon\Carbon::today()->format('Y年m月d日') )
-                                {{-- <x-primary-button class="ms-3"> --}}
-                                <a href="#" data-id="{{ $conference->id }}" onclick="cancelPost(this)" class="ml-4 bg-black text-white py-2 px-4">
-                                    キャンセルする
-                                </a>
-                                {{-- </x-primary-button> --}}
+                                <x-primary-button class="ms-3">
+                                    <a href="#" data-id="{{ $conference->id }}" onclick="cancelPost(this)" class="btn btn-secondary">
+                                        予約取消
+                                    </a>
+                                </x-primary-button>
                             @endif
+
+                            <!-- 「戻る」ボタンの配置 -->
+                            <div class="text-red-500 px-4">
+                                <x-primary-button class="ms-3">
+                                    <a href="{{ route('mypage.index') }}" class="btn btn-secondary">
+                                        戻る
+                                    </a>
+                                </x-primary-button>
+                            </div>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-    <!-- cancelボタンの処理 -->
+    <!-- cancelボタン（予約取消）の処理 -->
     <script>
         function cancelPost(e){
             'use strict';
-            if(confirm('本当にキャンセルしてもよろしいでしょうか？'))
+            if(confirm('本当に予約を取り消してもよろしいでしょうか？'))
             {
                 document.getElementById('cancel_' + e.dataset.id).submit();
             }
