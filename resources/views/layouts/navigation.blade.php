@@ -28,20 +28,16 @@
                     <!-- 管理責任者以上でアクセス可能 -->
                     <!-- ※「Responsive Navigation Menu」も同様に設定 -->
                     @can('manager-higher')
+                    <!-- 予約状況管理-論理削除実施の対象データ一覧 -->
+                    <x-nav-link :href="route('reservations.index')" :active="request()->routeIs('reservations.index')">
+                        予約一覧
+                    </x-nav-link>
                     <x-nav-link :href="route('conferences.index')" :active="request()->routeIs('conferences.index')">
                         イベント管理
                     </x-nav-link>
                     <!-- イベント管理-論理削除実施の対象データ一覧 -->
                     <x-nav-link :href="route('conferences.trashed')" :active="request()->routeIs('conferences.trashed')">
                         無効イベント一覧
-                    </x-nav-link>
-                    <!-- 予約状況管理-論理削除実施の対象データ一覧 -->
-                    <x-nav-link :href="route('reservations.index')" :active="request()->routeIs('reservations.index')">
-                        予約一覧
-                    </x-nav-link>
-                    <!-- 予約状況管理-論理削除実施の対象データ一覧 -->
-                    <x-nav-link :href="route('reservations.trashed')" :active="request()->routeIs('reservations.trashed')">
-                        無効予約一覧
                     </x-nav-link>
                     @endcan
                 </div>

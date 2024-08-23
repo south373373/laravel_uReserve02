@@ -35,6 +35,6 @@
                 {{ $slot }}
             </main>
         </div>
-        <script src="{{ mix('js/flatpickr.js')}}"></script>
+        {{-- <script src="{{ mix('js/flatpickr.js')}}"></script> --}}
     </body>
 </html>

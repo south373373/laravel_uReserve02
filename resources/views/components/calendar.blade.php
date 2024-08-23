@@ -12,8 +12,10 @@
     
     
     <!-- クエリ文字列を使って日付を更新 -->
-    <input id="calendar" class="block mt-1 mb-2 mx-auto" type="text" name="calendar" value="{{ $currentDate->format('Y-m-d') }}" />
-
+    
+    <!-- 日付選択の実行時にreloadを実施して、カレンダーの1週間分。但し、ローカル環境では日付選択の実行がうまく更新出来ず -->
+    <input id="calendar" class="block mt-1 mb-2 mx-auto" type="text" name="calendar" value="{{ $currentDate->format('Y-m-d') }}" onchange="location.reload()" />
+    
     <!-- カレンダーの体裁 -->
     <div class="flex mx-auto calendar-container">
         <x-calendar-time />

@@ -18,9 +18,13 @@ use Illuminate\Support\Facades\Auth;
 
 class ReservationController extends Controller
 {
-    public function dashboard()
+    // dashboard上のカレンダー上の日付選択実行時の処理
+    // 引数にデータを受け取るRequestを追記
+    public function dashboard(Request $request)
     {
-        $currentDate = CarbonImmutable::today();
+        // $currentDate = CarbonImmutable::today();
+        // 以下の通りにインスタンス化
+        $currentDate = new CarbonImmutable($request->date);
         $currentWeek = $this->generateWeek($currentDate);
         $conferences = ConferenceService::getWeekConferences(
             $currentDate->format('Y-m-d'),
@@ -28,6 +32,10 @@ class ReservationController extends Controller
         );
 
         $conferenceData = [];
+        
+        // 「満員」フラグを以下の通りに定義
+        $isFull = 0;
+
         foreach ($conferences as $conference) {
             $reservedPeople = Reservation::where('conference_id', $conference->id)
                 ->whereNull('canceled_date')

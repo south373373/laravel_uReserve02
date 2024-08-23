@@ -24,57 +24,6 @@ flatpickr("#calendar", {
     defaultDate: document.getElementById('calendar').value,  // 初期値設定
 });
 
-// 日付変更時にデータをフェッチする関数
-function fetchDate(date) {
-    console.log('Fetching data for date:', date);
-
-    fetch('/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify({ date: date })
-    })
-    .then(response => response.json())
-    .then(data => {
-        // const weekDisplay = document.getElementById('week-display');
-        // weekDisplay.innerHTML = ''; // 既存の表示をクリア
-        // data.currentWeek.forEach(week => {
-        //     weekDisplay.innerHTML += `
-        //         <div class="w-32">
-        //             <div class="py-1 px-2 border border-gray-200 text-center">${week.day}</div>
-        //             <div class="py-1 px-2 border border-gray-200 text-center">${week.dayOfWeek}</div>
-        //         </div>`;
-        // });
-
-        // カレンダー表示部分の更新処理
-        updateCalendar(data.currentWeek);
-    })
-    .catch(error => console.error('Error:', error));
-}
-
-
-// カレンダーの1週間分の日付を更新する関数
-function updateCalendar(weekData) {
-    const calendarContainer = document.querySelector('.calendar-container'); // カレンダーのDOM要素
-
-    // カレンダーをクリアして、新しい1週間分の日付を挿入
-    calendarContainer.innerHTML = '';
-
-    weekData.forEach(dayInfo => {
-        const dayColumn = document.createElement('div');
-        dayColumn.classList.add('w-32');
-
-        // 日付と曜日の表示
-        dayColumn.innerHTML = `
-            <div class="py-1 px-2 border border-gray-200 text-center">${dayInfo.day}</div>
-            <div class="py-1 px-2 border border-gray-200 text-center">${dayInfo.dayOfWeek}</div>
-        `;
-        calendarContainer.appendChild(dayColumn);
-    });
-}
-
 
 const setting = {
     "locale": Japanese,
@@ -96,30 +45,47 @@ flatpickr("#start_time", setting);
 flatpickr("#end_time", setting);
 
 
-// 今回用の追記分
-// - 日付変更時にデータをフェッチする関数
-// function fetchDate(date) {
-//     console.log('Fetching data for date:', date);
+// 
+// << dashboard画面上のカレンダー上の日付選択時の1週間分の更新処理 >>
+// 
+// 01. 日付変更時にデータをフェッチする関数
+function fetchDate(date) {
+    console.log('Fetching data for date:', date);
 
-//     fetch('/', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-//         },
-//         body: JSON.stringify({ date: date })
-//     })
-//     .then(response => response.json())
-//     .then(data => {
-//         const weekDisplay = document.getElementById('week-display');
-//         weekDisplay.innerHTML = ''; // 既存の表示をクリア
-//         data.currentWeek.forEach(week => {
-//             weekDisplay.innerHTML += `
-//                 <div class="w-32">
-//                     <div class="py-1 px-2 border border-gray-200 text-center">${week.day}</div>
-//                     <div class="py-1 px-2 border border-gray-200 text-center">${week.dayOfWeek}</div>
-//                 </div>`;
-//         });
-//     })
-//     .catch(error => console.error('Error:', error));
-// }
+    fetch('/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ date: date })
+    })
+    .then(response => response.json())
+    .then(data => {
+
+        // カレンダー表示部分の更新処理
+        updateCalendar(data.currentWeek);
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+
+// 02. カレンダーの1週間分の日付を更新する関数
+function updateCalendar(weekData) {
+    const calendarContainer = document.querySelector('.calendar-container'); // カレンダーのDOM要素
+
+    // カレンダーをクリアして、新しい1週間分の日付を挿入
+    calendarContainer.innerHTML = '';
+
+    weekData.forEach(dayInfo => {
+        const dayColumn = document.createElement('div');
+        dayColumn.classList.add('w-32');
+
+        // 日付と曜日の表示
+        dayColumn.innerHTML = `
+            <div class="py-1 px-2 border border-gray-200 text-center">${dayInfo.day}</div>
+            <div class="py-1 px-2 border border-gray-200 text-center">${dayInfo.dayOfWeek}</div>
+        `;
+        calendarContainer.appendChild(dayColumn);
+    });
+}

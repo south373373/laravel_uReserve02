@@ -18,9 +18,9 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
-            // Roleを追記
-            // $table->tinyInteger('role');
-            $table->tinyInteger('role')->nullable();
+            // Roleを追記し、ユーザー会員の権限レベル(9)を追記
+            // $table->tinyInteger('role')->nullable();
+            $table->tinyInteger('role')->nullable()->default(9);
             $table->timestamps();
         });
 
