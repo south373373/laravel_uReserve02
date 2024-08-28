@@ -31,7 +31,7 @@
                     @can('manager-higher')
                     <!-- 予約状況管理-論理削除実施の対象データ一覧 -->
                     <x-nav-link :href="route('reservations.index')" :active="request()->routeIs('reservations.index')">
-                        予約一覧
+                        予約履歴一覧
                     </x-nav-link>
                     <x-nav-link :href="route('conferences.index')" :active="request()->routeIs('conferences.index')">
                         イベント一覧

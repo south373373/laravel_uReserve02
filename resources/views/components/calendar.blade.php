@@ -26,27 +26,32 @@
                 @for($j =0; $j < 21; $j++)
                     <!-- イベントの有無の判定 -->
                     @if($conferences->isNotEmpty())
-                        @if(!is_null($conferences->firstWhere('start_date', $currentWeek[$i]['checkDay'] . " " . ConferenceConst::EVENT_TIME[$j] )))
+                    @php
+                        $conference = $conferences->firstWhere('start_date', $currentWeek[$i]['checkDay'] . " " . ConferenceConst::EVENT_TIME[$j]);
+                    @endphp
+
+                        @if(!is_null($conference))
                             @php
-                                // 最後をidにて指定。
-                                $conferenceId = $conferences->firstWhere('start_date', $currentWeek[$i]['checkDay'] . " " . ConferenceConst::EVENT_TIME[$j] )->id;
-                                
-                                $conferenceName = $conferences->firstWhere('start_date', $currentWeek[$i]['checkDay'] . " " . ConferenceConst::EVENT_TIME[$j] )->name;
-                                $conferenceInfo = $conferences->firstWhere('start_date', $currentWeek[$i]['checkDay'] . " " . ConferenceConst::EVENT_TIME[$j] );
-                                
-                                // 開始 - 終了の差分を計算
-                                $conferencePeriod = \Carbon\Carbon::parse($conferenceInfo->start_date)->diffInMinutes($conferenceInfo->end_date) / 30 - 1;
+                                // 予約人数を取得して満員かどうかを確認
+                                $reservedPeople = $conference->reservations()->whereNull('canceled_date')->sum('number_of_people');
+                                $isFull = $conference->max_people <= $reservedPeople;
+
+                                $conferenceId = $conference->id;
+                                $conferenceName = $conference->name;
+                                $conferencePeriod = \Carbon\Carbon::parse($conference->start_date)->diffInMinutes($conference->end_date) / 30 - 1;
                             @endphp
 
                             <a href="{{ route('conferences.detail', ['id' => $conferenceId ])}}">
                                 <!-- イベントがあった場合は背景色を変更 <イベント名> -->
-                                <div class="py-1 px-2 h-8 border border-gray-200 text-xs bg-blue-100">{{ $conferenceName }}</div>
+                                <!-- <div class="py-1 px-2 h-8 border border-gray-200 text-xs bg-blue-100">{{ $conferenceName }}</div> -->
+                                <div class="py-1 px-2 h-8 border border-gray-200 text-xs {{ $isFull ? 'bg-red-100' : 'bg-blue-100' }}">{{ $conferenceName }}</div>
                             </a>
 
                             @if( $conferencePeriod > 0 )
                                 <!-- イベントがあった場合は背景色を変更 <30分単位> -->
                                 @for($k = 0; $k < $conferencePeriod; $k++)
-                                    <div class="py-1 px-2 h-8 border border-gray-200 text-xs bg-blue-100"></div>
+                                    <!-- <div class="py-1 px-2 h-8 border border-gray-200 text-xs bg-blue-100"></div> -->
+                                    <div class="py-1 px-2 h-8 border border-gray-200 text-xs {{ $isFull ? 'bg-red-100' : 'bg-blue-100' }}"></div>
                                 @endfor
                                 @php $j += $conferencePeriod @endphp
                             @endif

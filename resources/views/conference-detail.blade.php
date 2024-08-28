@@ -108,6 +108,11 @@
                             @else
                                 <span class="text-xs">このイベントは既に予約済みです。</span>
                             @endif
+
+                            <!-- 「戻る」ボタンの配置 -->
+                            <x-thirdary-button class="ms-3">
+                                <a href="{{ Auth::check() ? route('dashboard') : route('guest.calendar') }}" class="btn btn-secondary">戻る</a>
+                            </x-thirdary-button>
                         </div>
                     </form>
                 </div>

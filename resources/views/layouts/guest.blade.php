@@ -19,7 +19,7 @@
             <div>
                 <a href="/">
                     <!-- 新規作成したロゴの大きさを調整 -->
-                    <x-application-logo class="w-40 h-40 fill-current text-gray-500" />
+                    <x-application-logo class="w-60 h-60 fill-current text-gray-500" />
                 </a>
             </div>
 

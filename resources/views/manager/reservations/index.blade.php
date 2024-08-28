@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            予約状況一覧
+            予約履歴一覧
         </h2>
     </x-slot>
 

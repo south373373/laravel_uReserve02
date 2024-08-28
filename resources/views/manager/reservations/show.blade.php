@@ -26,9 +26,7 @@
                     <!-- Session Status -->
                     <x-auth-session-status class="mb-4" :status="session('status')" />
 
-<!-- 後日体裁を編集 -->
-                   <!-- 編集ページへ遷移 -->
-                   
+                   <!-- 編集ページへ遷移 -->                   
                    <form method="GET" action="{{ route('reservations.edit', ['reservation' => $reservation->id]) }}">
                 
                         <!-- ユーザー名（予約者名） -->
@@ -79,9 +77,9 @@
                             
                             <!-- 「戻る」ボタンの配置 -->
                             <div class="text-red-500 px-4 py-3">
-                                <x-primary-button class="ms-3">
+                                <x-thirdary-button class="ms-3">
                                     <a href="{{ route('reservations.index') }}" class="btn btn-secondary">戻る</a>
-                                </x-primary-button>
+                                </x-thirdary-button>
                             </div>
                         </div>
 

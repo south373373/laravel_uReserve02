@@ -89,11 +89,11 @@
 
                             <!-- 「戻る」ボタンの配置 -->
                             <div class="text-red-500 px-4">
-                                <x-primary-button class="ms-3">
+                                <x-thirdary-button class="ms-3">
                                     <a href="{{ route('mypage.index') }}" class="btn btn-secondary">
                                         戻る
                                     </a>
-                                </x-primary-button>
+                                </x-thirdary-button>
                             </div>
                         </div>
                     </form>

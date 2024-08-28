@@ -35,6 +35,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// 未ログイン時のカレンダー画面
+// *未ログイン状態でカレンダー画面上にあるイベントの詳細画面からカレンダー画面へ戻るボタン用に設定。
+//  序列的に認証ルーティングよりも上位に設定しないと「ログイン画面」へ誘導されるため。
+Route::get('/guest/calendar', [CalendarController::class, 'index'])->name('guest.calendar');
 
 // 管理責任者側
 Route::prefix('manager')

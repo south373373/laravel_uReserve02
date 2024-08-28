@@ -44,7 +44,7 @@
                       <!-- Conferenceテーブルの情報を表示出力 -->
                       @foreach($trashedConferences as $conference)
                       <tr>
-                        <td class="px-4 py-3">{{ $conference->name }}</a></td>
+                        <td class="px-4 py-3">{{ $conference->name }}</td>
                         <td class="px-4 py-3">{{ $conference->start_date }}</td>
                         <td class="px-4 py-3">{{ $conference->end_date }}</td>
                         <!-- Reservationテーブルと外部結合のcolumnの情報を表示 -->

@@ -88,6 +88,11 @@
                                     編集する
                                 </x-primary-button>
                             @endif
+
+                            <!-- 「戻る」ボタンの配置 -->
+                            <x-thirdary-button class="ms-3">
+                                <a href="{{ route('conferences.index') }}" class="btn btn-secondary">戻る</a>
+                            </x-thirdary-button>
                         </div>
                     </form>
                 </div>
