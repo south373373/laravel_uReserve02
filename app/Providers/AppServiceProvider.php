@@ -11,9 +11,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //PHPのロケールを日本語に設定
+        // >> ServiceProviderでロケールを再定義するのイレギュラーなやり方のため
+        //    本番環境のデプロイ時に「.env」ファイルのlocaleを
+        //   「APP_LOCALE=en」から「APP_LOCALE=ja」に変更。
+        // 
+        // PHPのロケールを日本語に設定
         // カレンダー画面上の曜日が英語表記ではなく日本語に表示。
-        setlocale(LC_TIME, 'ja_JP.UTF-8');
+        // setlocale(LC_TIME, 'ja_JP.UTF-8');
     }
 
     /**
