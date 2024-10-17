@@ -15,8 +15,11 @@ return new class extends Migration
             $table->id();
             // 追記分
             // 外部キー設定・同時更新設定
-            $table->foreignId('user_id')->constrained()->onUpdate('cascade');
-            $table->foreignId('conference_id')->constrained()->onUpdate('cascade');
+            // 追加要素として「予約(reservations)」のデータ(user_id・conference_id)が紐づけられていた場合でも削除可能に編集
+            // $table->foreignId('user_id')->constrained()->onUpdate('cascade');
+            $table->foreignId('user_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
+            // $table->foreignId('conference_id')->constrained()->onUpdate('cascade');
+            $table->foreignId('conference_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->integer('number_of_people');
             $table->datetime('canceled_date')->nullable();
 
