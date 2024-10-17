@@ -65,10 +65,6 @@
             </div>
         @endfor
     </div>
-    <!-- 作成中は残しておく。最終的に完成した後に削除 -->
-    <!-- @foreach($conferences as $conference) -->
-    {{--  {{ $conference->start_date }} --}}
-    <!-- @endforeach -->
 </div>
 
 

@@ -69,7 +69,7 @@ class ReservationController extends Controller
         return $week;
     }
 
-    // 
+    // カレンダー画面上のイベントのクリック時に表示する詳細画面の定義
     public function detail($id)
     {
         $conference = Conference::findOrFail($id);
@@ -77,29 +77,11 @@ class ReservationController extends Controller
         $currentDate = CarbonImmutable::today();
         $currentWeek = $this->generateWeek($currentDate);
 
-        // // 予約数の合計queryの処理
-        // $reservedPeople = Reservation::select('conference_id', Reservation::raw('sum(number_of_people) as number_of_people'))
-        // // cancelの場合、合計人数から外す。
-        // ->whereNull('canceled_date')
-        // ->groupBy('conference_id')
-        // // 更に表示されているイベント情報と指定
-        // ->having('event_id', $conference->id)
-        // ->first();
-
         // 現在の予約人数の合計を取得
         $reservedPeople = Reservation::where('conference_id', $conference->id)
         ->whereNull('canceled_date')
         ->sum('number_of_people');
 
-        // // 予約の有無で判定
-        // if(!is_null($reservedPeople))
-        // {
-        //     // 予約可能な人数は、定員人数(max_people)から予約人数(number_of_people)を引いた値。
-        //     $reservablePeople = $conference->max_people - $reservedPeople->number_of_people;
-        // }
-        // else{
-        //     $reservablePeople = $conference->max_people;
-        // }
 
         // ログイン対象ユーザーがイベントの予約済みか否かの絞り込み
         $isReserved = Reservation::where('user_id', '=', Auth::id())
@@ -114,7 +96,6 @@ class ReservationController extends Controller
         // 満員かどうかのフラグ
         $isFull = $reservablePeople <= 0;
 
-        // return view('conference-detail', compact('conference', 'reservablePeople'));
         return view('conference-detail', compact('conference', 'currentDate', 'currentWeek', 'reservablePeople', 'isFull', 'isReserved'));
     }
 
@@ -175,48 +156,6 @@ class ReservationController extends Controller
             // return redirect()->route('conferences.detail', $conference->id);
         }
     }
-
-    // << 代替の修正案 >>
-    // 
-    // public function reserve(Request $request)
-    // {
-    //     $conference = Conference::findOrFail($request->id);
-    
-    //     // 予約人数の合計を計算
-    //     $reservedPeople = Reservation::where('conference_id', $conference->id)
-    //         ->whereNull('canceled_date')
-    //         ->sum('number_of_people'); // `sum`メソッドを使用
-    
-    //     // 予約可能かどうかの判定
-    //     if ($conference->max_people >= $reservedPeople + $request->reserved_people) {
-    //         // ここでもう一度データベースを確認
-    //         $currentReservedPeople = Reservation::where('conference_id', $conference->id)
-    //             ->whereNull('canceled_date')
-    //             ->sum('number_of_people');
-    
-    //         if ($conference->max_people >= $currentReservedPeople + $request->reserved_people) {
-    //             Reservation::create([
-    //                 'user_id' => Auth::id(),
-    //                 'conference_id' => $conference->id,
-    //                 'number_of_people' => $request->reserved_people,
-    //             ]);
-    
-    //             // flashメッセージを設定
-    //             return redirect()
-    //                 ->route('dashboard')
-    //                 ->with('status', '登録しました');
-    //         } else {
-    //             return redirect()
-    //                 ->route('dashboard', $conference->id)
-    //                 ->with('status', 'この人数では予約が出来ません。');
-    //         }
-    //     } else {
-    //         return redirect()
-    //             ->route('dashboard', $conference->id)
-    //             ->with('status', 'この人数では予約が出来ません。');
-    //     }
-    // }
-
 
 
     /**

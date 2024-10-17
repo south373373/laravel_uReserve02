@@ -15,42 +15,7 @@ class ConferenceController extends Controller
 {
     public function index()
     {
-        // //追記分
-        // // 本日の日付を取得
-        // $today = Carbon::today();
-
-        // // 予約数の合計queryの処理
-        // $reservedPeople = Reservation::select('conference_id', Reservation::raw('sum(number_of_people) as number_of_people'))
-        // // cancelの場合、合計人数から外す。
-        // ->whereNull('canceled_date')
-        // ->groupBy('conference_id');
-        // // 処理確認
-        // // dd($reservedPeople);
-
-        // // conferencesテーブルの昇順・表示件数設定
-        // // 本日以降の日付のみが一覧に表示
-        // $conferences = Conference::leftjoinSub($reservedPeople, 'reservedPeople',
-        // function($join){
-        //     $join->on('conferences.id', '=', 'reservedPeople.conference_id');
-        // })
-        // ->whereDate('start_date', '>=', $today)
-        // ->orderBy('start_date','asc')
-        // ->paginate(10);
-        // // ->get();
-        // // dd($conferences);
-
-        // $conferences = Conference::whereIsVisible(0)
-        //     ->whereDate('start_date', '>=', Carbon::today())
-        //     ->OrderBy('start_date', 'asc')
-        //     ->paginate();
-
-        // // // 出力確認
-        // // // ->get();
-        // // // dd($conferences);
-
-
         // resources > views > managerを作成
-        // return view('manager.conferences.index',compact('conferences'));
         return view('manager.conferences.index', ['conferences' => Conference::afterToday()]);
     }
 
@@ -65,13 +30,6 @@ class ConferenceController extends Controller
     public function store(StoreConferenceRequest $request)
     {
         //追記分
-
-        // 重複のチェック
-        // $check = DB::table('conferences')
-        // ->whereDate('start_date', $request['event_date'])
-        // ->whereTime('end_date', '>', $request['start_time'])
-        // ->whereTime('start_date', '<', $request['end_time'])
-        // ->exists();
 
         // 重複のチェック詳細
         // - Services > ConferenceService.phpの関数を記載
@@ -235,10 +193,7 @@ class ConferenceController extends Controller
         // $conference->save();
 
 
-
         // flashメッセージを設定
-        // session()->flash('status', '更新しました');
-
         return redirect()
             ->route('conferences.index')
             ->with('status', '更新しました');
@@ -248,30 +203,6 @@ class ConferenceController extends Controller
     // 新規にpast(過去一覧用)のmethodを作成
     public function past()
     {
-        // // 本日の日付を取得
-        // $today = Carbon::today();
-
-        // $reservedPeople = Reservation::select('conference_id', Reservation::raw('sum(number_of_people) as number_of_people'))
-        // // cancelの場合、合計人数から外す。
-        // ->whereNull('canceled_date')
-        // ->groupBy('conference_id');
-
-        // $conferences = Conference::leftjoinSub($reservedPeople, 'reservedPeople',
-        // function($join){
-        //     $join->on('conferences.id', '=', 'reservedPeople.conference_id');
-        // })
-        // ->whereDate('start_date', '<', $today)
-        // ->orderBy('start_date','desc')
-        // ->paginate(10);
-
-
-        // // $conferences = DB::table('conferences')
-        // // ->whereDate('start_date', '<', $today)
-        // // ->orderBy('start_date','desc')
-        // // ->paginate(10);
-
-        // return view('manager.conferences.past', compact('conferences'));
-
         // index同様に以下の1行にて当日以前(過去の日付)を一覧表示
         return view('manager.conferences.index', ['conferences' => Conference::beforeToday()]);
     }
@@ -315,10 +246,6 @@ class ConferenceController extends Controller
         ->paginate(10);
         
         return view('manager.conferences.trashed', compact('trashedConferences'));
-
-        // 上記編集前のコード
-        // $trashedConferences = Conference::onlyTrashed()->paginate(10);
-        // return view('manager.conferences.trashed', compact('trashedConferences'));
     }
 
     // 論理削除データからの復旧処理
@@ -327,6 +254,7 @@ class ConferenceController extends Controller
         $conference = Conference::withTrashed()->findOrFail($id);
         $conference->restore();
         
+        // flashメッセージを設定        
         // session()->flash('status', 'イベント管理へ戻しましたので、ご確認ください');
 
         return redirect()
@@ -340,6 +268,7 @@ class ConferenceController extends Controller
         $conference = Conference::withTrashed()->findOrFail($id);
         $conference->forceDelete();
 
+        // flashメッセージを設定
         // session()->flash('status', '完全に削除しました');
         
         return redirect()

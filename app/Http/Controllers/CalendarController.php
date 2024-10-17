@@ -76,38 +76,4 @@ class CalendarController extends Controller
         }
         return $currentWeek;
     }
-
-    // public function getDate($date)
-    // {
-    //     // 現在の日付取得
-    //     $currentDate = $date;
-
-    //     // 1週間分の情報の配列
-    //     $currentWeek = [];
-
-    //     for ($i = 0; $i < 7; $i++) {
-    //         // parseでCarbonインスタンスに変換後、日付を加算
-    //         $day = CarbonImmutable::parse($currentDate)->addDays($i)->format('m月d日');
-    //         // 追記
-    //         $checkDay = CarbonImmutable::parse($currentDate)->addDays($i)->format('Y-m-d');
-    //         $dayOfWeek = CarbonImmutable::parse($currentDate)->dayName;
-    //         $sevenDaysLater = CarbonImmutable::parse($currentDate)->addDays(7);
-
-    //         // array_push($currentWeek, $day);
-    //         array_push($currentWeek, [
-    //             'day' => $day,
-    //             'checkDay' => $checkDay,
-    //             'dayOfWeek' => $dayOfWeek,
-    //         ]);
-    //     }
-    //     // dd($currentWeek); 
-        
-    //     $conferences = Conference::where('start_date', '>=', $currentDate)
-    //     ->where('start_date', '<=', $sevenDaysLater)
-    //     ->get();
-
-    //     return response()->json([
-    //         'currentWeek' => $currentWeek,
-    //     ]);
-    // }
 }
