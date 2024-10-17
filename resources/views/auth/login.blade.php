@@ -2,6 +2,15 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
+    <!-- Login User and Password -->
+    <div>
+        <p class="font-bold">Login User</p>
+        <ul>
+            <li>[Admin User]::manager@manager.com / password123</li>
+            <li>[General User]::test@test.com / password123</li>
+        </ul>
+    </div>
+    <br>
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
